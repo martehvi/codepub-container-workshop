@@ -29,3 +29,7 @@ Diskusjon rundt ChatGPT tokenet:
 
 TO DO: 
 - Lage Docker compose fil for applikasjonene som var laget i tidligere TechCollege
+
+
+# Setting up repo on your computer:
+After cloning the repo, it should be sufficient to run `docker compose up` inside the repo root folder. Assumed that you already have Docker with Compose plugin setup 
