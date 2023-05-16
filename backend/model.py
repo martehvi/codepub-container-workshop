@@ -1,1 +1,0 @@
-print("☹ auch, don't poke me ☹")
