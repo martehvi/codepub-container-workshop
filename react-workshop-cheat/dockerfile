@@ -1,0 +1,22 @@
+# ==== CONFIGURE =====
+# Use a Node base image using version 16-alpine
+FROM node:16-alpine
+# Set the working directory to /app inside the container
+WORKDIR /app
+# ==== COPY ALL RELEVANT FILES =====
+# Use this approach: COPY <source/path/on/local/machine> <destination/path/on/container/image/relative/to/workdir>
+# First copy src folder to /app/src in the container
+COPY src src
+# Then copy public folder to /ap/public in the container
+COPY public public
+# Finally copy the specific files "package.json", "package-lock.json" and "tsconfig.json" to /app
+# Hint: you can copy multiple files by listing as many sources you wish and ending with a destination path
+COPY [ "package.json", "package-lock.json", "tsconfig.json", "./" ] 
+# ==== BUILD =====
+# Install dependencies with the same command as you used locally
+RUN npm install
+
+EXPOSE 3000
+# ==== RUN =======
+# Start the app with the same command as you used locally
+CMD [ "npm", "start"]
