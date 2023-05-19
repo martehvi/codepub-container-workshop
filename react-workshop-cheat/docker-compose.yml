@@ -3,8 +3,8 @@ services:
   python-backend:
     container_name: codepub-container-workshop-react-backend
     build:
-      dockerfile: 00-initial-setup/backend/backend.dockerfile
-      context: .
+      dockerfile: backend.dockerfile
+      context: applications/backend/
     ports:
       - "8000:8000"
     networks:
@@ -12,8 +12,8 @@ services:
   python-frontend:
     container_name: codepub-container-workshop-react-frontend
     build:
-      dockerfile: 00-initial-setup/frontend/dockerfile
-      context: .
+      dockerfile: dockerfile
+      context: applications/frontend/
     ports:
       - "3000:3000"
     networks:
