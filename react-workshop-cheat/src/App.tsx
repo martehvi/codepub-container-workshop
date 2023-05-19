@@ -24,7 +24,7 @@ function App() {
         const requestBody = JSON.stringify({
             ingredients: ingredients
         })
-        await fetch("http://localhost:8000/keepAlive", {
+        await fetch("http://localhost:8000/checkLiveness", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

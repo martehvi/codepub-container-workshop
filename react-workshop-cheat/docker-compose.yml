@@ -5,7 +5,7 @@ services:
     build: 
       dockerfile: backend.dockerfile
     ports: 
-    - "8001:8000"
+    - "8000:8000"
     networks: 
     - mynet
   python-frontend: 
@@ -13,7 +13,7 @@ services:
     build: 
       dockerfile: dockerfile 
     ports:
-    - "3001:3000"
+    - "3000:3000"
     networks:
     - mynet
 networks:
