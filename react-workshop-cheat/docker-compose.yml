@@ -1,23 +1,25 @@
-version: '3'
-services: 
+version: "3"
+services:
   python-backend:
     container_name: codepub-container-workshop-react-backend
-    build: 
+    build:
       dockerfile: backend.dockerfile
-    ports: 
-    - "8000:8000"
-    networks: 
-    - mynet
-  python-frontend: 
-    container_name: codepub-container-workshop-react-frontend
-    build: 
-      dockerfile: dockerfile 
+      context: applications/backend/
     ports:
-    - "3000:3000"
+      - "8000:8000"
     networks:
-    - mynet
+      - mynet
+  python-frontend:
+    container_name: codepub-container-workshop-react-frontend
+    build:
+      dockerfile: dockerfile
+      context: applications/frontend/
+    ports:
+      - "3000:3000"
+    networks:
+      - mynet
 networks:
-  mynet: 
+  mynet:
     driver: bridge
-    ipam: 
+    ipam:
       driver: default
