@@ -10,21 +10,30 @@ Before we delve into the `docker-compose.yml` file lets first run our Backend an
 
 ### Frontend
 
-Lets move into the frontend folder and run `docker run build`.
+Lets move into the frontend folder.
+
+1. Start off with building a docker image by running: `docker build -t <image-tag-name> .`
+   - The `-t` flag provides the image with a tag which is essentially a name for the image.
+   - The `.` in the end describes the path to where Docker Engine should find the dockerfile to build the image upon.
+2. Next lets run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
+   - The `-p` flag exposes a port on your local machine and maps it to a port on the docker container. The mapping uses the format, `<host-port>:<container-port>`.
 
 ### Backend
 
 Now that you got the frontend up and running, lets do the same for the backend. Change directories into the backend folder and spin up the docker file there as well.
 
+1. Start off with building a docker image by running: `docker build -t <image-tag-name> .`
+2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
+
 Are they both running? Nice! You should now be able to add ingredients and display the generic static recipe in the browser window!
 
 ## With Docker Compose
 
-Wouldn't it be col if you only had to write **one** command to accomplish all of that. Oh wait, that is what we could use Docker Compose for, let's try it!
+Wouldn't it be cool if you only had to write **one** command to accomplish all of that. That's what we could use Docker Compose for, let's try it!
 
-To start you off we have created a **`docker-compose.yml`** file for you to use. Located at the top of this repository.
+To start you off we have created a **`docker-compose.yml`** file for you to use. It's located at the top of this repository.
 
-Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Lets start by giving our two services names. It's recommended to use naming convention that describes the container content, making it easy to understand and distinguish between different containerized applications.
+Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Let's start by giving our two services names. It's recommended to use naming convention that describes the container content or purpose, making it easy to understand and distinguish between different containerized applications.
 
 <details>
 <summary>Need a file-structure recap? </summary>
@@ -36,14 +45,20 @@ We have the following folder structure to work with, where the applications each
     applications/
         frontend/
         backend/
-        backend-2.0/
+        backend-openai/
 ```
 
 </details>
 
 ### Task 1.1
 
-Figure out the build configuration for the two services.
+Figure out the build configuration for the two services. In a docker compose service the build configuration has the followign format:
+
+```yml
+build:
+  dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
+  contex: # Specifies the path to the directory containing the Dockerfile and the build context.
+```
 
 <details>
 <summary>✅ Solution</summary>
@@ -69,89 +84,45 @@ Now that the services have been added why dont we try and run our applications a
 
 Try running `docker compose up` from the root folder where the `docker-compose.yml` file is located.
 
-Did it work? Probably not. Why is that? When we ran our applications individually we specified the port mappings between the container and our host comouter, this port mapping needs to be set in our confuguration.
+Did it work? If you tried to check localhost:3000 without luck than maybe you realised that we did not spscify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host comouter, this port mapping needs to be added in our confuguration if we want to reach the containers.
 
 ### Task 1.2
 
-Try adding port mappings to our services. Make them reachable form your host computer.
+Try adding port mappings to our services. Make them reachable form your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure our mapping. As before here is a tempalte:
+
+```yml
+service-name:
+  ...
+  ports:
+    - `<host-port>:<container-port>`
+    ...
+```
 
 <details>
 <summary>✅ Solution</summary>
-For the frontend service the configuration should now look like this:
+At the end of this task you should have a `docker-compose.yml` file that looks like this:
 
 ```yml
-frontend:
-  container_name: codepub-container-workshop-frontend
-  build:
-    dockerfile: dockerfile
-    context: applications/frontend/
-  ports:
-    - "3000:3000"
-```
-
-Similarly the backend build configuration should be:
-
-```yml
-backend:
-  container_name: codepub-container-workshop-backend
-  build:
-    dockerfile: backend.dockerfile
-    context: applications/backend/
-  ports:
-    - "8000:8000"
-```
-
-</details>
-
-Try running `docker compose up` one more time, can you now access the applications? Cool! Now you have successflly exposed the ports form docker and mapped them to your host computers network so you can reach them in your browser.
-
-But, as myou may have noticed if you try fetching a recipe notheing happens...
-
-Currently our two applications are running independently even if they belong to the same Docker Compose orchestration. We need to tell the containers how to communicate and reach eachother. This is done by setting up and connecting them through a network.
-
-## Docker Networks
-
-### Task 1.3
-
-Add a network configuration and tell each application to utilize that network.
-
-<details>
-<summary>✅ Solution</summary>
-After adding the network specifications and adding it to the two service configurations your Docker Compose file should looke something like this:
-
-```yml
+version: "3"
 services:
-  backend:
+  codepub-backend:
     container_name: codepub-container-workshop-backend
     build:
       dockerfile: backend.dockerfile
       context: applications/backend/
     ports:
       - "8000:8000"
-    networks:
-      - mynet
-  frontend:
+  codepub-frontend:
     container_name: codepub-container-workshop-frontend
     build:
       dockerfile: dockerfile
       context: applications/frontend/
     ports:
       - "3000:3000"
-    networks:
-      - mynet
-networks:
-  mynet:
-    driver: bridge
-    ipam:
-      driver: default
 ```
 
 </details>
 
-Try running `docker compose up` one last time.
-
-Voilà! We have now suceccsully used Docker Compose to containerize our two applications and configured them to communicate as a multi-container structure!
-
-**TODO - refactor tasks and solutions**
+Try running `docker compose up --build` this time (_adding the --build flag to ensure that we re-build our docker images_), can you now access the applications? Nice! Now you have successflly exposed the ports and mapped them to your host computer so you can reach them in your browser.
 
 Awesome! Now you have successfully set up our application using Docker Copmose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.
