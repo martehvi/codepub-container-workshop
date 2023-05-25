@@ -35,6 +35,20 @@ To start you off we have created a **`docker-compose.yml`** file for you to use.
 
 Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Let's start by giving our two services names. It's recommended to use naming convention that describes the container content or purpose, making it easy to understand and distinguish between different containerized applications.
 
+You can add a service using the following templase:
+
+```yml
+service-name:
+  container-name:
+  build:
+    dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
+    context: # Specifies the path to the directory containing the Dockerfile and the build context.
+```
+
+### Task 1.1
+
+Figure out the build configuration for the two services. In a docker compose service the service configuration has the following format:
+
 <details>
 <summary>Need a file-structure recap? </summary>
 We have the following folder structure to work with, where the applications each have configured docker files in their respective root folders:
@@ -50,32 +64,22 @@ We have the following folder structure to work with, where the applications each
 
 </details>
 
-### Task 1.1
-
-Figure out the build configuration for the two services. In a docker compose service the build configuration has the followign format:
-
-```yml
-build:
-  dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
-  contex: # Specifies the path to the directory containing the Dockerfile and the build context.
-```
-
 <details>
 <summary>✅ Solution</summary>
 For the frontend service the context and dockerfile should be:
 
 ```yml
 build:
-  dockerfile: backend.dockerfile
-  context: applications/backend/
+  dockerfile: dockerfile
+  context: applications/frontend/
 ```
 
 Similarly the backend build configuration should be:
 
 ```yml
 build:
-  dockerfile: dockerfile
-  context: applications/frontend/
+  dockerfile: backend.dockerfile
+  context: applications/backend/
 ```
 
 </details>
@@ -84,11 +88,11 @@ Now that the services have been added why dont we try and run our applications a
 
 Try running `docker compose up` from the root folder where the `docker-compose.yml` file is located.
 
-Did it work? If you tried to check localhost:3000 without luck than maybe you realised that we did not spscify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host comouter, this port mapping needs to be added in our confuguration if we want to reach the containers.
+Did it work? If you tried to check localhost:3000 without luck than maybe you realised that we did not spscify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host computer, this port mapping needs to be added in our confuguration if we want to reach the applications from localhost.
 
 ### Task 1.2
 
-Try adding port mappings to our services. Make them reachable form your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure our mapping. As before here is a tempalte:
+Try adding port mappings to our services. Make them reachable from your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure such a mapping. As before here is a tempalte:
 
 ```yml
 service-name:
@@ -125,4 +129,4 @@ services:
 
 Try running `docker compose up --build` this time (_adding the --build flag to ensure that we re-build our docker images_), can you now access the applications? Nice! Now you have successflly exposed the ports and mapped them to your host computer so you can reach them in your browser.
 
-Awesome! Now you have successfully set up our application using Docker Copmose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.
+Now you have successfully set up your applications using Docker Copmose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.

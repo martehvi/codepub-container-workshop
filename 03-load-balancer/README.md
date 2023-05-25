@@ -31,7 +31,7 @@ But, if you would like to see one potential way of solving this we have shared o
 ```js
 ...
 
- async function getRecipeSmart() {
+ async function getRecipe2() {
     setLoading(true);
     const requestBody = JSON.stringify({
       ingredients: ingredients,
@@ -51,7 +51,7 @@ But, if you would like to see one potential way of solving this we have shared o
 ...
 
 <Button onClick={getRecipe}>Get Recipe</Button>
-<Button onClick={getRecipeSmart}>Get Smart Recipe</Button>
+<Button onClick={getRecipe2}>Get Smart Recipe</Button>
 
 ...
 ```
@@ -66,23 +66,31 @@ To visualize this is how your applications communicate at this point:
 
 **TODO add visual arcitecture of how everything communicates with localhost\***
 
-As you can see it is very reliant on communicating across your host computers network. To make the containers communicate within the compose setup we need to adjust our current configurations.
+As you can see it is very reliant on communicating across your host computers network. To make the containers communicate within the compose setup we need to adjust our current configurations. We will star tby adding a network between out containers.
 
 ### Task 3.2
 
-Add a network to your compose file, and add that network to all applications. Network configurations follow this teplate:
+Add a network to your compose file, and add that network to all applications. Network configurations follow this template:
 
 ```yml
 networks:
-  network-name: # Sets the name of the network. used as reference within the services.
-  driver: # Specifies the network driver to use for the network. It determines how containers in the network communicate with each other.
+  network-name: # Sets the name of the network. Used as reference within the services.
+    driver: # Specifies the network driver to use for the network. It determines how containers in the network communicate with each other.
 ```
 
-Such a network can be added to a service by referncing the network name in the `networks` part of the service which we would need to add. In the same manner as you did with ports.
+Such a network can be added to a service by referncing the network-name in the `networks` part of the service. You can do this in the same manner as you did with ports.
 
 ### Task 3.3
 
-Add a network you can apply to your applications into your current configuration.
+Add a network you can apply to your applications into your current configuration. Here is a template:
+
+```yml
+service-name:
+  ...
+  networks:
+    - `network-name`
+    ...
+```
 
 <details>
 <summary>✅ Solution</summary>
@@ -124,6 +132,59 @@ networks:
 ```
 
 </details>
+
+We are still exposing our applicaitons through the port mappings. But to verify that the applications can reach eachother you can enter the terminal within the frontend application's container and try to ping the backend.
+
+**TODO make steps/taks for this**
+
+As you could see the containers are now connected within the compose setup.
+
+To securely isolate and make our appplications independent from localhost you can remove the host part from the port mappings in our configuration. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we only expose the container port to the compose orchestration, and not to your host computer.
+
+### Task 3.4
+
+Remove the host port mapping form your compose configuration.
+
+<details>
+<summary>✅ Soulution</summary>
+
+```yml
+---
+python-backend:
+  container_name: codepub-container-workshop-react-backend
+  build:
+    dockerfile: backend.dockerfile
+    context: applications/backend/
+  ports:
+    - ":8000"
+  networks:
+    - mynet
+python-frontend:
+  container_name: codepub-container-workshop-react-frontend
+  build:
+    dockerfile: dockerfile
+    context: applications/frontend/
+  ports:
+    - ":3000"
+  networks:
+    - mynet
+openapi-bakend:
+  container_name: codepub-container-workshop-openai-backend
+  build:
+    dockerfile: backend-openai.dockerfile
+    context: applications/backend-openai/
+  ports:
+    - ":8080"
+  networks:
+    - mynet
+---
+```
+
+</details>
+
+If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications. They are more secured but it is hard to work with applications you are not able to reach.
+
+So, lets make the reachable without compromising too much on security. For this we will add a Proxy Server using nginx.
 
 **TODO add nginx part with description and tasks **
 

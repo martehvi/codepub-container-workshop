@@ -4,7 +4,7 @@ Now let's take our application to the next level! Currently (_as you probably no
 
 Dont worry, the backend for this already exists. But there is a few things we need to do in order to make use of it.
 
-## Run local Backend Locally
+## Run Backend Locally
 
 Some of you may have noticed the `extra` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
 
@@ -49,11 +49,11 @@ npm install
 npm start
 ```
 
-Did it work? Cool! now lets containerize it.
+Did it work? Cool! Now lets containerize it.
 
 ### Task 2.2
 
-Create a `dockerfile` for the _backend-openai_ application.
+Create a `dockerfile` for the _backend-openai_ application. Fill in the necessary contents.
 
 <details>
 <summary>Hint</summary>
@@ -100,7 +100,7 @@ Starting out with a new empty service shell, we need to add the build configurat
 
 ### Task 2.3
 
-Creata a new service in the Docker Compose file for our new backend.
+Creata a new service in the Docker Compose file for our new backend. Remember to add port a mapping to localhost.
 
 <details>
 <summary>✅ Solution</summary>
@@ -112,9 +112,7 @@ backend-openai:
       dockerfile: dockerfile
       context: applications/backend-openai/
     ports:
-      - "8001:8000"
-    networks:
-      - mynet
+      - "8080:8080"
 ```
 
 </details>
