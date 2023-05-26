@@ -35,7 +35,7 @@ To start you off we have created a **`docker-compose.yml`** file for you to use.
 
 Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Let's start by giving our two services names. It's recommended to use naming convention that describes the container content or purpose, making it easy to understand and distinguish between different containerized applications.
 
-You can add a service using the following templase:
+You can add a service using the following template:
 
 ```yml
 service-name:
@@ -88,7 +88,7 @@ Now that the services have been added why dont we try and run our applications a
 
 Try running `docker compose up` from the root folder where the `docker-compose.yml` file is located.
 
-Did it work? If you tried to check localhost:3000 without luck than maybe you realised that we did not spscify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host computer, this port mapping needs to be added in our confuguration if we want to reach the applications from localhost.
+Did it work? If you tried to check localhost:3000 without luck than maybe you realized that we did not specify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host computer, this port mapping needs to be added in our confuguration if we want to reach the applications from localhost.
 
 ### Task 1.2
 
@@ -115,14 +115,14 @@ services:
       dockerfile: backend.dockerfile
       context: applications/backend/
     ports:
-      - "8000:8000"
+      - "8001:8000"
   codepub-frontend:
     container_name: codepub-container-workshop-frontend
     build:
       dockerfile: dockerfile
       context: applications/frontend/
     ports:
-      - "3000:3000"
+      - "3001:3000"
 ```
 
 </details>

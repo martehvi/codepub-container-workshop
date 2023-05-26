@@ -1,6 +1,6 @@
 # Part 3: Add a Load Balancer
 
-Even though the static backend did not provide a very useful recipe we should adapt our application to accomodate for the users that (for some unknown reason) would want to still use the old Backend.
+Even though the static backend did not provide a very useful recipe we should adapt our application to accomodate for the users that would want to still use the old Backend. Since, as you probably noticed, the OpenAI backend is not the fastest to respond (takes around 20 seconds...), also the API key has limitations and might be used up.
 
 In this final task, we will therefore extend our Docker Compose configuration to include both the static and the OpenAI backend services. To distribute traffic between the two backends we will add another service, a _Proxy Server_.
 
@@ -58,7 +58,7 @@ But, if you would like to see one potential way of solving this we have shared o
 
 </details>
 
-Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three apllications that all are exposed to your host computer through the port mappings you defined in your compose file. This setup is all well and good for development for hosting your setup locally. But in some cases some applications reequire higher security with least privilege principle when it comes to access.
+Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three apllications that all are exposed to your host computer through the port mappings you defined in your compose file. This setup is all well and good for development for hosting your setup locally. But in some cases some applications require higher security with least privilege principle when it comes to access.
 
 So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orhcestration?
 
@@ -79,18 +79,6 @@ networks:
 ```
 
 Such a network can be added to a service by referncing the network-name in the `networks` part of the service. You can do this in the same manner as you did with ports.
-
-### Task 3.3
-
-Add a network you can apply to your applications into your current configuration. Here is a template:
-
-```yml
-service-name:
-  ...
-  networks:
-    - `network-name`
-    ...
-```
 
 <details>
 <summary>✅ Solution</summary>
@@ -141,9 +129,9 @@ As you could see the containers are now connected within the compose setup.
 
 To securely isolate and make our appplications independent from localhost you can remove the host part from the port mappings in our configuration. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we only expose the container port to the compose orchestration, and not to your host computer.
 
-### Task 3.4
+### Task 3.3
 
-Remove the host port mapping form your compose configuration.
+Remove the the port outside of the compose network from your compose configuration. I.e. the ports that expose your applications to localhost.
 
 <details>
 <summary>✅ Soulution</summary>

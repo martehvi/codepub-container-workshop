@@ -105,14 +105,15 @@ Creata a new service in the Docker Compose file for our new backend. Remember to
 <details>
 <summary>✅ Solution</summary>
 The new service configuration should look something like this:
+
 ```yml
 backend-openai:
-    container_name: codepub-container-workshop-backend-openai
-    build:
-      dockerfile: dockerfile
-      context: applications/backend-openai/
-    ports:
-      - "8080:8080"
+  container_name: codepub-container-workshop-backend-openai
+  build:
+    dockerfile: dockerfile
+    context: applications/backend-openai/
+  ports:
+    - "8080:8080"
 ```
 
 </details>
