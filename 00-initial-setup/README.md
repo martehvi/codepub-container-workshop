@@ -21,4 +21,4 @@ Lets take a look at the three applications involved in this workshop:
 
 1. [Docker Compose](../01-docker-compose/README.md)
 2. [Replace Backend](../02-replace-backend/README.md)
-3. [Load Balancer](../03-load-balancer/README.md)
+3. [Proxy server](../03-proxy-server/README.md)

@@ -7,15 +7,16 @@ WORKDIR /app
 # Use this approach: COPY <source/path/on/local/machine> <destination/path/on/container/image/relative/to/workdir>
 # First copy src fodler to /app/src in the container
 
-COPY src src
-
-COPY public public
 # Finally copy the specific files "package.json", "package-lock.json" and "tsconfig.json" to /app
 # Hint: you can copy multiple fiels by listing as many sources you wish and ending with a destination path
 COPY [ "package.json", "package-lock.json", "tsconfig.json", "./" ] 
 # ==== BUILD =====
 # Install dependencies with the same command as you used locally
 RUN npm install
+
+COPY src src
+
+COPY public public
 # ==== RUN =======
 # Start the app with the same command as you used locally
 CMD [ "npm", "start"]
