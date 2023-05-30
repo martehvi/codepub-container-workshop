@@ -225,6 +225,7 @@ The reason for this, can be explained with the below image
 
 ![application-structure-2](./../assets/images/application-structure-2.png)
 
+
 ### Task 3.5 Update frontend to reach the internal backend containers using nginx
 As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step. 
 
@@ -237,9 +238,9 @@ So, lets make the reachable without compromising too much on security. For this 
 
 </details>
 
-**Adding the nginx to the docker network:**
+**a) Adding the nginx to the docker network:**
 We want to add the nginx server as part of our docker network, so that it has access to the mapping we have done which allows us to reach the backend containers with their container names. 
-We have chosen to use one of **Dockers** premade `images`, `nginx:1.16.0-alpine`.
+We have chosen to use one of Dockers premade image, `nginx:1.16.0-alpine`.
 
 Try now to finish the configuration for the nginx container in the docker compose file by adding ports and network to it. We have added in the new parameters `image` for you - so now you simply need to add a fitting port mapping (choose whichever, but our solution has used the port `8003` for both external and internal). 
 
@@ -274,7 +275,7 @@ services:
 ```
 </details>
 
-**Remapping the HTTP request with nginx proxying:**
+**b) Remapping the HTTP request with nginx proxying:**
 Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `ngnix.conf`. Let's add a server that listens to port `8003`, and checks the liveness endpoint by addin a `location` and redirects traffic to the container with the simple backend (first backend we used). Below is a template you can use for the `nginx.conf` file:
 
 
@@ -308,7 +309,8 @@ server {
 ```
 </details>
 
-Now also add this config file as part of the nginx container in the `docker-compose.yml`. This can be done by adding the file as part of the `volumes`.
+**c) Add our nginx config to the container:**
+Now, add this config file as part of the nginx container in the `docker-compose.yml`. This can be done by adding the file as part of the `volumes`.
 
 A **volume** is a storage accessible for the container, which does not get deleted when the container shuts down, unlike everything else related to the container. In this example, we'll use a volume to add our proxy configuration file to the container. 
 
@@ -345,7 +347,7 @@ Now, test if this remapping has solved our problem with not accessing backend fr
 Nginx is running on `localhost:8003`, and the endpoint is the same. The frontend logic that needs changing is in `App.tsx`
 </details>
 
-**Add redirecting between two different frontends from the same server:**
+**d) Add redirecting between two different frontends from the same server:**
 Now we want to use this same localhost:8003 to redirect the traffic for the two different backends when the user clicks the two different "Get recipe" buttons in frontend. There is several ways to do this, and our solution has chosen to use `v1` and `v2` tags in the url to differentiate. Try to now finish the nginx.conf file.  
 
 Hint: you can duplicate the already existing proxy_pass we configured. The one already configured can now be renamed to `/v1/...`.
@@ -368,7 +370,7 @@ server {
 ```
 </details>
 
-**Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint. 
+**e) Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint. 
 
 **[Add in solution - should we have the whole file?]**
 
