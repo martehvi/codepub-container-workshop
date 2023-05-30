@@ -232,8 +232,8 @@ The container name is `codepub-container-workshop-react-backend` and the relevan
 server {
   listen 8003;
 
-  location /checkLiveness {
-    proxy_pass http://codepub-container-workshop-react-backend:8000/checkLiveness
+  location /recipes {
+    proxy_pass http://codepub-container-workshop-react-backend:8000/recipes
   }
 }
 ```
@@ -266,6 +266,14 @@ services:
       - mynet
   ...
 ```
+</details>
+
+Now, test if this remapping has solved our problem with not accessing backend from the frontend 🤓 We need one final step in our setup, namely to change which url the frontend calls. It should now be changed from `localhost:8000/recipes` to the url nginx now runs on. 
+
+<details>
+<summary>Hint 💡</summary>
+
+Nginx is running on `localhost:8003`, and th
 </details>
 
 **Add redirecting between two different frontends from the same server:**
