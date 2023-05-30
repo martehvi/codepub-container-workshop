@@ -64,15 +64,13 @@ But, if you would like to see one potential way of solving this we have shared o
 
 </details>
 
-Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three apllications that all are exposed to your host computer through the port mappings you defined in your compose file. This setup is all well and good for development for hosting your setup locally. But in some cases some applications require higher security with least privilege principle when it comes to access.
-
-So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration?
+Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three applications that all are exposed to your host computer through the port mappings you defined in your compose file.
 
 To visualize this is how your applications communicate at this point:
 
 ![Application-structure-1](./../assets/images/application-structure-1.png)
 
-As you can see our architecture is very reliant on communicating across your host computers network. To make the containers communicate within the compose setup we need to adjust our current configurations.
+As you can see our architecture is very reliant on communicating across our host computers network. This setup is all well and good for development for hosting your setup locally. However, in some cases some applications require higher security with least privilege principle when it comes to access. So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration? That's what we will do now with Docker `network` and `nginx`. 
 
 We will start by removing the ports that expose the backend outside of the docker environment. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we expose only the container port to the compose orchestration, and not to your host computer.
 
