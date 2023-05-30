@@ -186,7 +186,19 @@ We have chosen to use one of **Dockers** premade `images`, `nginx:1.16.0-alpine`
 
 Try now to finish the configuration for the nginx container in the docker compose file by adding ports and network to it. We have added in the new parameters `image` for you - so now you simply need to add a fitting port mapping (choose whichever, but our solution has used the port `8003` for both external and internal). 
 
-*[Question to myself]: would it be smart to make them figure out the "nginx.conf" referencing themselves?*
+<summary>Template</summary>
+
+```yml
+services:
+  ...
+  nginx:
+    image: nginx:1.16.0-alpine
+    ports: 
+      - 
+    networks: 
+      - 
+  ...
+```
 
 <details>
 <summary>✅ Solution</summary>
