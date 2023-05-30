@@ -12,9 +12,10 @@ Before we delve into the `docker-compose.yml` file lets first run our Backend an
 
 Lets move into the frontend folder.
 
-1. Start off with building a docker image by running: `docker build -t <image-tag-name> .`
+1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
    - The `-t` flag provides the image with a tag which is essentially a name for the image.
    - The `.` in the end describes the path to where Docker Engine should find the dockerfile to build the image upon.
+   - The `-f` is used to reference the dockerfile name used in the build. This flag is needed when naming the file anything other than the default `dockerfile` value.
 2. Next lets run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
    - The `-p` flag exposes a port on your local machine and maps it to a port on the docker container. The mapping uses the format, `<host-port>:<container-port>`.
 
@@ -26,6 +27,8 @@ Now that you got the frontend up and running, lets do the same for the backend. 
 2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
 
 Are they both running? Nice! You should now be able to add ingredients and display the generic static recipe in the browser window!
+
+> **NB**: Remember to _kill off any running containers_ before continuing. The containers willrun until they are manually shutdown. You can manually shut down your running frontend and backend by using the `ctrl+C` in the running treminal or stopping them in using the stop button in Docker Desktop.
 
 ## With Docker Compose
 

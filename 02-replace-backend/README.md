@@ -110,7 +110,7 @@ The new service configuration should look something like this:
 backend-openai:
   container_name: codepub-container-workshop-backend-openai
   build:
-    dockerfile: dockerfile
+    dockerfile: backend-openai.dockerfile
     context: applications/backend-openai/
   ports:
     - "8080:8080"
