@@ -175,17 +175,7 @@ The reason for this, can be explained with the below image
 ### Task 3.4 Update frontend to reach the internal backend containers using nginx
 As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step. 
 
-**TODO make steps/taks for this**
-
-
-
-
-**[Rephrase]** 
-If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications. They are more secured but it is hard to work with applications you are not able to reach.
-
-So, lets make the reachable without compromising too much on security. For this we will add a Proxy Server using nginx.
-
-**TODO add nginx part with description and tasks**
+So, lets make the reachable without compromising too much on security. For this we will add a Proxy Server using **nginx**.
 
 (*Theory*:)
 Nginx is a HTTP proxyer, and does exactly that - forwards a request that is sent to the nginx server to whichever server/endpoint wanted. In our case where we have closed off all external entrances to the backend, and nginx can be used as our entrance to these backends, without us actually having to know anything about where the backends are hosted. 
@@ -216,13 +206,7 @@ services:
 </details>
 
 **Remapping the HTTP request with nginx proxying:**
-Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `ngnix.conf`. Let's add a server that listens to port `8003`, and checks the liveness endpoint by addin a `location` and redirects traffic to the container with the simple backend (first backend we used).
-
-<details>
-<summary>Hint 💡</summary>
-
-The container name is `codepub-container-workshop-react-backend` and the relevant port (internal in the network) is `8000`
-</details>
+Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `ngnix.conf`. Let's add a server that listens to port `8003`, and checks the liveness endpoint by addin a `location` and redirects traffic to the container with the simple backend (first backend we used). Below is a template you can use for the `nginx.conf` file:
 
 
 ```yml
@@ -234,6 +218,12 @@ server {
   }
 }
 ```
+
+<details>
+<summary>Hint 💡</summary>
+
+The container name is `codepub-container-workshop-react-backend` and the relevant port (internal in the network) is `8000`
+</details>
 
 <details>
 <summary>✅ Solution</summary>
@@ -300,6 +290,12 @@ server {
 }
 ```
 </details>
+
+**Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint. 
+
+**[Add in solution - should we have the whole file?]**
+
+Now try spinning up everything with `docker compose up --build` and click the two buttons.
 
 --
 
