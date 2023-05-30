@@ -116,17 +116,32 @@ openapi-bakend:
 
 </details>
 
-If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications through your browser, which tries to contact the backend on `localhost:8080/recipes`. 
+If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications through your browser. The frontend still tries to contact the backends on `localhost:8000/recipes` and `localhost:8080/recipes`, which are no longer exposed. 
 
 To visualize, this is what the current state of your setup looks like:
 
 ![application-structure-2](./../assets/images/application-structure-2.png)
 
-Now that the ports are only exposed within the compose setup, why dont you try to see if they can communicate or reach eachother.
+Now that the ports are only exposed within the compose setup, why dont we try to see if we can make the containers communicate and reach eachother internally.
 
 ### Task 3.3
 
 Try to ping the backend endpoint `/checkLiveness` from the terminal of your containerized frontend application.
+
+**[TODO: show that we can use public IP to access it here]**
+
+<details>
+<summary>Hint 💡</summary>
+
+With some smart Docker *magic*, containers can communicate by replacing the domain (like `localhost`) with their *container names* (or public IP). Using the relevant container name, we can call the backend using `curl <container-name>:<container-internal-port>/checkLiveness`
+
+You can find all names of your running containers with this command 
+```
+docker ps --format "{{.Names}}"
+```
+
+*NOTE*: we have not applied this magic yet - so no magic yet. This step is to emphasize how the containers know of each other before and after this *magic* ⭐
+</details>
 
 <details>
 <summary>✅ Solution</summary>
@@ -147,7 +162,7 @@ This can be achieved in two ways. Entering the terminal through the container in
   2. Click on the `terminal` tab and execurte step 2 above.
   </details>
 
-Did it work? Probably not. At this point each container exposes their ports but in order to be able to successfully communicate we need to setup a network and instruct our applications to communicate through that network. So, lets do that.
+Did it work? Unfortunately not. In order to be able to successfully communicate using container references we need to setup a network and instruct our applications to communicate through that network. So, lets do that.
 
 ### Task 3.4
 
