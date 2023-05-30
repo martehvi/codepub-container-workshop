@@ -273,7 +273,7 @@ Now, test if this remapping has solved our problem with not accessing backend fr
 <details>
 <summary>Hint 💡</summary>
 
-Nginx is running on `localhost:8003`, and th
+Nginx is running on `localhost:8003`, and the endpoint is the same. The frontend logic that needs changing is in `App.tsx`
 </details>
 
 **Add redirecting between two different frontends from the same server:**
