@@ -185,9 +185,122 @@ If you try running your compose setup now what happens? As you probably realized
 
 So, lets make the reachable without compromising too much on security. For this we will add a Proxy Server using nginx.
 
-**TODO add nginx part with description and tasks **
-(Theory:)
+**TODO add nginx part with description and tasks**
+
+(*Theory*:)
+Nginx is a HTTP proxyer, and does exactly that - forwards a request that is sent to the nginx server to whichever server/endpoint wanted. In our case where we have closed off all external entrances to the backend, and nginx can be used as our entrance to these backends, without us actually having to know anything about where the backends are hosted. 
+
+**Adding the nginx to the docker network:**
+We want to add the nginx server as part of our docker network, so that it has access to the mapping we have done which allows us to reach the backend containers with their container names. 
+We have chosen to use one of **Dockers** premade `images`, `nginx:1.16.0-alpine`.
+
+Try now to finish the configuration for the nginx container in the docker compose file by adding ports and network to it. We have added in the new parameters `image` for you - so now you simply need to add a fitting port mapping (choose whichever, but our solution has used the port `8003` for both external and internal). 
+
+*[Question to myself]: would it be smart to make them figure out the "nginx.conf" referencing themselves?*
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+version: "3"
+services:
+  ...
+  nginx:
+    image: nginx:1.16.0-alpine
+    ports:
+      - "8003:8003"
+    networks:
+      - mynet
+  ...
+```
+</details>
+
+**Remapping the HTTP request with nginx proxying:**
+Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `ngnix.conf`. Let's add a server that listens to port `8003`, and checks the liveness endpoint by addin a `location` and redirects traffic to the container with the simple backend (first backend we used).
+
+<details>
+<summary>Hint 💡</summary>
+
+The container name is `codepub-container-workshop-react-backend` and the relevant port (internal in the network) is `8000`
+</details>
 
 
+```yml
+server {
+  listen <INSERT_PORT_HERE>;
 
-Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new ansdexiting, and had fun doing so!
+  location /<INSERT_ENDPOINT_HERE> {
+    proxy_pass http://<CONTAINER_NAME>:<CONTAINER_INTERNAL_PORT>/checkLiveness
+  }
+}
+```
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+server {
+  listen 8003;
+
+  location /checkLiveness {
+    proxy_pass http://codepub-container-workshop-react-backend:8000/checkLiveness
+  }
+}
+```
+</details>
+
+Now also add this config file as part of the nginx container in the `docker-compose.yml`. This can be done by adding the file as part of the `volumes`.
+
+A **volume** is a storage accessible for the container, which does not get deleted when the container shuts down, unlike everything else related to the container. In this example, we'll use a volume to add our proxy configuration file to the container. 
+
+Explanation of the `volumes` parameter in the docker-compose.yml file: 
+- first part (before `:`) `./nginx.conf` is which local file you want to be copied to the container
+- second part, `/etc/nginx/conf.d/default.conf`, is the file on the container that the content will be copied/added to.
+- third part, `ro` means `read-only` after the file has been mounted
+
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+version: "3"
+services:
+  ...
+  nginx:
+    image: nginx:1.16.0-alpine
+    volumes: 
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8003:8003"
+    networks:
+      - mynet
+  ...
+```
+</details>
+
+**Add redirecting between two different frontends from the same server:**
+Now we want to use this same localhost:8003 to redirect the traffic for the two different backends when the user clicks the two different "Get recipe" buttons in frontend. There is several ways to do this, and our solution has chosen to use `v1` and `v2` tags in the url to differentiate. Try to now finish the nginx.conf file.  
+
+Hint: you can duplicate the already existing proxy_pass we configured. The one already configured can now be renamed to `/v1/...`.
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+server {
+  listen 8003;
+
+  location /v1/recipe {
+    proxy_pass http://codepub-container-workshop-react-backend:8000/recipe
+  }
+
+  location /v2/recipe {
+    proxy_pass http://codepub-container-workshop-openai-backend:8080/recipe
+  }
+}
+```
+</details>
+
+--
+
+Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so!
