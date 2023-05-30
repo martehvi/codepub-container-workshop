@@ -120,7 +120,8 @@ If you try running your compose setup now what happens? As you probably realized
 
 To visualize, this is what the current state of your setup looks like:
 
-![application-structure-2](./../assets/images/application-structure-2.png)
+**[TODO: add an architecture viewing showing that all containers are located on localhost - NOT the picture explaining "client side rendering"]** 
+
 
 Now that the ports are only exposed within the compose setup, why dont we try to see if we can make the containers communicate and reach eachother internally.
 
@@ -174,7 +175,7 @@ networks:
     driver: # Specifies the network driver to use for the network. It determines how containers in the network communicate with each other.
 ```
 
-Such a network can be added to a service by referncing the network-name in the `networks` part of the service. You can do this in the same manner as you did with ports.
+Such a network can be added to a service by referencing the network name in the `networks` part of the service. You can do this in the same manner as you did with ports.
 
 <details>
 <summary>✅ Solution</summary>
@@ -221,6 +222,8 @@ To verify that the applications can reach eachother you can enter the terminal w
 
 Now test what happens if you try to use this same logic to update the `App.tsx` call to the backend with this container name reference. You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED". 
 The reason for this, can be explained with the below image  
+
+![application-structure-2](./../assets/images/application-structure-2.png)
 
 ### Task 3.5 Update frontend to reach the internal backend containers using nginx
 As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step. 
