@@ -130,3 +130,5 @@ services:
 Try running `docker compose up --build` this time (_adding the --build flag to ensure that we re-build our docker images_), can you now access the applications? Nice! Now you have successflly exposed the ports and mapped them to your host computer so you can reach them in your browser.
 
 Now you have successfully set up your applications using Docker Copmose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.
+
+Let's move into **[Part 2](../02-replace-backend/README.md)**, where we will replace our static backend with a smart one.

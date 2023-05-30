@@ -6,12 +6,12 @@ Dont worry, the backend for this already exists. But there is a few things we ne
 
 ## Run Backend Locally
 
-Some of you may have noticed the `extra` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
+Some of you may have noticed the `assets` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
 
-Our new backend depend on some environment values that we need to configure. So, start off by moving into the extra folder and create a new `.env` file.
+Our new backend depend on some environment values that we need to configure. So, start off by moving into the `assets` folder and create a new `.env` file.
 
 ```shell
-echo > extra/backend-openai/.env
+echo > assets/backend-openai/.env
 ```
 
 Open the file and enter the following content:
@@ -42,7 +42,7 @@ EXPOSE 8080
 </details>
 As for the API key ask one of us when you have come this far and we will give it to you!
 
-Once you have the environment variables in place, lets try to run the application locally. Move into the `extra/backend-openai` folder and run the following commands:
+Once you have the environment variables in place, lets try to run the application locally. Move into the `assets/backend-openai` folder and run the following commands:
 
 ```bash
 npm install
@@ -87,7 +87,7 @@ CMD [ "npm", "start" ]
 To comply with the existing code structure let's move the folder containing the new backend into our applications folder.
 
 ```shell
-mv extra/backend-openai applications # Execute from repository root
+mv assets/backend-openai applications # Execute from repository root
 ```
 
 ## Add the new Backend to Docker Compose
@@ -118,6 +118,5 @@ backend-openai:
 
 </details>
 
-**TODO - make tasks and solutions**
-
 Wow, look at that! The recipies you recieve are now actually relevant and useful for the input ingredients.
+Now, for the final part we will use all three applications and even add a fourth service! Lets dive into **[Part 3](../03-proxy-server/README.md)**.
