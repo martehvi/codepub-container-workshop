@@ -60,15 +60,61 @@ But, if you would like to see one potential way of solving this we have shared o
 
 Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three apllications that all are exposed to your host computer through the port mappings you defined in your compose file. This setup is all well and good for development for hosting your setup locally. But in some cases some applications require higher security with least privilege principle when it comes to access.
 
-So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orhcestration?
+So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration?
 
 To visualize this is how your applications communicate at this point:
 
 **TODO add visual arcitecture of how everything communicates with localhost\***
 
-As you can see it is very reliant on communicating across your host computers network. To make the containers communicate within the compose setup we need to adjust our current configurations. We will star tby adding a network between out containers.
+As you can see it is very reliant on communicating across your host computers network. To make the containers communicate within the compose setup we need to adjust our current configurations. We will start by removing the ports that expose the backend outside of the docker environment, and adding a network between our containers to make it possible for internal communication between the containers.
+
+Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we only expose the container port to the compose orchestration, and not to your host computer.
 
 ### Task 3.2
+
+Remove the the port outside of the compose network from your compose configuration. I.e. the ports that expose your applications to localhost.
+
+<details>
+<summary>✅ Soulution</summary>
+
+```yml
+---
+python-backend:
+  container_name: codepub-container-workshop-react-backend
+  build:
+    dockerfile: backend.dockerfile
+    context: applications/backend/
+  ports:
+    - ":8000"
+  networks:
+    - mynet
+python-frontend:
+  container_name: codepub-container-workshop-react-frontend
+  build:
+    dockerfile: dockerfile
+    context: applications/frontend/
+  ports:
+    - ":3000"
+  networks:
+    - mynet
+openapi-bakend:
+  container_name: codepub-container-workshop-openai-backend
+  build:
+    dockerfile: backend-openai.dockerfile
+    context: applications/backend-openai/
+  ports:
+    - ":8080"
+  networks:
+    - mynet
+---
+```
+
+</details>
+
+
+Now test that you are not able to access the backend containers from the outside anymore (`localhost:8000`)- the frontend will load forever since it cannot access the backend with the previously working localhost call.
+
+### Task 3.3
 
 Add a network to your compose file, and add that network to all applications. Network configurations follow this template:
 
@@ -121,59 +167,27 @@ networks:
 
 </details>
 
-We are still exposing our applicaitons through the port mappings. But to verify that the applications can reach eachother you can enter the terminal within the frontend application's container and try to ping the backend.
+To verify that the applications can reach eachother you can enter the terminal within the frontend application's container and try to ping the backend, with for example `curl {backend-container-name}:{internal-backend-port}/checkLiveness`.
+
+Now test what happens if you try to use this same logic to update the `App.tsx` call to the backend with this container name reference. You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED". 
+The reason for this, can be explained with the below image  
+
+### Task 3.4 Update frontend to reach the internal backend containers using nginx
+As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step. 
 
 **TODO make steps/taks for this**
 
-As you could see the containers are now connected within the compose setup.
 
-To securely isolate and make our appplications independent from localhost you can remove the host part from the port mappings in our configuration. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we only expose the container port to the compose orchestration, and not to your host computer.
 
-### Task 3.3
 
-Remove the the port outside of the compose network from your compose configuration. I.e. the ports that expose your applications to localhost.
-
-<details>
-<summary>✅ Soulution</summary>
-
-```yml
----
-python-backend:
-  container_name: codepub-container-workshop-react-backend
-  build:
-    dockerfile: backend.dockerfile
-    context: applications/backend/
-  ports:
-    - ":8000"
-  networks:
-    - mynet
-python-frontend:
-  container_name: codepub-container-workshop-react-frontend
-  build:
-    dockerfile: dockerfile
-    context: applications/frontend/
-  ports:
-    - ":3000"
-  networks:
-    - mynet
-openapi-bakend:
-  container_name: codepub-container-workshop-openai-backend
-  build:
-    dockerfile: backend-openai.dockerfile
-    context: applications/backend-openai/
-  ports:
-    - ":8080"
-  networks:
-    - mynet
----
-```
-
-</details>
-
+**[Rephrase]** 
 If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications. They are more secured but it is hard to work with applications you are not able to reach.
 
 So, lets make the reachable without compromising too much on security. For this we will add a Proxy Server using nginx.
 
 **TODO add nginx part with description and tasks **
+(Theory:)
+
+
 
 Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new ansdexiting, and had fun doing so!
