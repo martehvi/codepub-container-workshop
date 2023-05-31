@@ -10,39 +10,38 @@ Before we delve into the `docker-compose.yml` file lets first run our Backend an
 
 ### Frontend
 
-Lets move into the frontend folder.
+Let's move into the frontend folder (`applications/frontend`).
 
 1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
    - The `-t` flag provides the image with a tag which is essentially a name for the image.
    - The `.` in the end describes the path to where Docker Engine should find the dockerfile to build the image upon.
    - The `-f` is used to reference the dockerfile name used in the build. This flag is needed when naming the file anything other than the default `dockerfile` value.
-2. Next lets run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
+2. Next, let's run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
    - The `-p` flag exposes a port on your local machine and maps it to a port on the docker container. The mapping uses the format, `<host-port>:<container-port>`.
 
 ### Backend
 
-Now that you got the frontend up and running, lets do the same for the backend. Change directories into the backend folder and spin up the docker file there as well.
+Now that you got the frontend up and running, let's do the same for the backend. Change directories into the backend folder and spin up the dockerfile there as well.
 
 1. Start off with building a docker image by running: `docker build -t <image-tag-name> .`
 2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
 
 Are they both running? Nice! You should now be able to add ingredients and display the generic static recipe in the browser window!
 
-> **NB**: Remember to _kill off any running containers_ before continuing. The containers willrun until they are manually shutdown. You can manually shut down your running frontend and backend by using the `ctrl+C` in the running treminal or stopping them in using the stop button in Docker Desktop.
+> **NB**: Remember to _kill off any running containers_ before continuing. The containers will run until they are manually shutdown. You can manually shut down your running frontend and backend by using the `ctrl+C` in the running treminal or stopping them in using the stop button in Docker Desktop.
 
 ## With Docker Compose
 
-Wouldn't it be cool if you only had to write **one** command to accomplish all of that. That's what we could use Docker Compose for, let's try it!
+Wouldn't it be cool if you only had to write **one** command to accomplish all of that? That's what we could use Docker Compose for, let's try it!
 
-To start you off we have created a **`docker-compose.yml`** file for you to use. It's located at the top of this repository.
+To start you off, we have created a **`docker-compose.yml`** file for you to use. It's located at the top of this repository.
 
-Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Let's start by giving our two services names. It's recommended to use naming convention that describes the container content or purpose, making it easy to understand and distinguish between different containerized applications.
+Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Let's start by giving our two services names. It's recommended to use a naming convention that describes the container content or purpose, making it easy to understand and distinguish between different containerized applications.
 
 You can add a service using the following template:
 
 ```yml
-service-name:
-  container-name:
+<service-name>:
   build:
     dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
     context: # Specifies the path to the directory containing the Dockerfile and the build context.
