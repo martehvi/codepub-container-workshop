@@ -71,17 +71,19 @@ We have the following folder structure to work with, where the applications each
 For the frontend service the context and dockerfile should be:
 
 ```yml
-build:
-  dockerfile: dockerfile
-  context: applications/frontend/
+frontend:
+  build:
+    dockerfile: dockerfile
+    context: applications/frontend/
 ```
 
 Similarly the backend build configuration should be:
 
 ```yml
-build:
-  dockerfile: backend.dockerfile
-  context: applications/backend/
+backend:
+  build:
+    dockerfile: backend.dockerfile
+    context: applications/backend/
 ```
 
 </details>
