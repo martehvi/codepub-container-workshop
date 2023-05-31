@@ -37,8 +37,12 @@ But, if you would like to see one potential way of solving this we have shared o
 ```js
 ...
 
-<Button onClick={() => getRecipe(8000)}>Get Recipe</Button>
-<Button onClick={() => getRecipe(8080)}>Get Smart Recipe</Button>
+      <Button onClick={() => getRecipe("localhost", 8000)}>
+      Get Recipe
+      </Button>
+      <Button onClick={() => getRecipe("localhost", 8080)}>
+      Get Smart Recipe
+      </Button>
 
 ...
 ```
@@ -134,64 +138,8 @@ This can be achieved in two ways. Entering the terminal through the container in
 - Enter the frontend through `Docker Desktop``
   1. Open Docker Desktop. Locate and click on the container running your frontend.
   2. Click on the `terminal` tab and execurte step 2 above.
-  </details>
-
-Did it work? Unfortunately not. In order to be able to successfully communicate using container references we need to setup a network and instruct our applications to communicate through that network. So, lets do that.
-
-### Task 3.4
-
-Add a network to your compose file, and add that network to all applications. Network configurations follow this template:
-
-```yml
-networks:
-  network-name: # Sets the name of the network. Used as reference within the services.
-    driver: # Specifies the network driver to use for the network. It determines how containers in the network communicate with each other.
-```
-
-Such a network can be added to a service by referencing the network name in the `networks` part of the service. You can do this in the same manner as you did with ports.
-
-<details>
-<summary>✅ Solution</summary>
-By the end of this part your compose file should look like this:
-
-```yml
-version: "3"
-services:
-  python-backend:
-    build:
-      dockerfile: backend.dockerfile
-      context: applications/backend/
-    ports:
-      - ":8000"
-    networks:
-      - mynet
-  python-frontend:
-    build:
-      dockerfile: dockerfile
-      context: applications/frontend/
-    ports:
-      - "3000:3000"
-    networks:
-      - mynet
-  openapi-bakend:
-    build:
-      dockerfile: backend-openai.dockerfile
-      context: applications/backend-openai/
-    ports:
-      - ":8080"
-    networks:
-      - mynet
-
-networks:
-  mynet:
-    driver: bridge
-```
-
-</details>
-
-To verify that the applications can reach eachother you can enter the terminal within the frontend application's container and try to ping the backend again ([Task 3.2](#task-32)).
-
-Now test what happens if you try to use this same logic to update the `App.tsx` call to the backend with this container name reference.
+    </details>
+  Now that we know they can reach eachother internally we need to also update the frontend call to reference the container name, as it is currently referencing `localhost`.
 
 Open the `App.tsx` file and change the calls from `localhost` to `container-name`.
 
