@@ -120,5 +120,5 @@ backend-openai:
 
 TODO: Add running command
 
-Wow, look at that! The recipies you recieve are now actually relevant and useful for the input ingredients.
+Wow, look at that! The recipies you receive are now actually relevant and useful for the input ingredients.
 Now, for the final part we will use all three applications and even add a fourth service! Lets dive into **[Part 3](../03-proxy-server/README.md)**.
