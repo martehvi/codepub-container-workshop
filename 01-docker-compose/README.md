@@ -71,7 +71,7 @@ We have the following folder structure to work with, where the applications each
 For the frontend service the context and dockerfile should be:
 
 ```yml
-frontend:
+codepub-frontend:
   build:
     dockerfile: dockerfile
     context: applications/frontend/
@@ -80,7 +80,7 @@ frontend:
 Similarly the backend build configuration should be:
 
 ```yml
-backend:
+codepub-backend:
   build:
     dockerfile: backend.dockerfile
     context: applications/backend/
@@ -92,17 +92,17 @@ Now that the services have been added why dont we try and run our applications a
 
 Try running `docker compose up` from the root folder where the `docker-compose.yml` file is located.
 
-Did it work? If you tried to check localhost:3000 without luck than maybe you realized that we did not specify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host computer, this port mapping needs to be added in our confuguration if we want to reach the applications from localhost.
+Did it work? If you tried to check `localhost:3000` without luck than maybe you realized that we did not specify any port mappings in our command just now. When we ran our applications individually we specified the port mappings between the container and our host computer, this port mapping needs to be added in our confuguration if we want to reach the applications from localhost.
 
 ### Task 1.2
 
 Try adding port mappings to our services. Make them reachable from your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure such a mapping. As before here is a tempalte:
 
 ```yml
-service-name:
+<service-name>:
   ...
   ports:
-    - `<host-port>:<container-port>`
+    - <host-port>:<container-port>
     ...
 ```
 
@@ -133,6 +133,6 @@ services:
 
 Try running `docker compose up --build` this time (_adding the --build flag to ensure that we re-build our docker images_), can you now access the applications? Nice! Now you have successflly exposed the ports and mapped them to your host computer so you can reach them in your browser.
 
-Now you have successfully set up your applications using Docker Copmose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.
+Now you have successfully set up your applications using Docker Compose. As you can see in the Docker Desktop UI, you have now containerized and orchestrated multiple containers together.
 
 Let's move into **[Part 2](../02-replace-backend/README.md)**, where we will replace our static backend with a smart one.
