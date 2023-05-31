@@ -42,7 +42,6 @@ You can add a service using the following template:
 
 ```yml
 service-name:
-  container-name:
   build:
     dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
     context: # Specifies the path to the directory containing the Dockerfile and the build context.
@@ -113,19 +112,17 @@ At the end of this task you should have a `docker-compose.yml` file that looks l
 version: "3"
 services:
   codepub-backend:
-    container_name: codepub-container-workshop-backend
     build:
       dockerfile: backend.dockerfile
       context: applications/backend/
     ports:
-      - "8001:8000"
+      - "8000:8000"
   codepub-frontend:
-    container_name: codepub-container-workshop-frontend
     build:
       dockerfile: dockerfile
       context: applications/frontend/
     ports:
-      - "3001:3000"
+      - "3000:3000"
 ```
 
 </details>

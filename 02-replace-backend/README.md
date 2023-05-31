@@ -23,26 +23,23 @@ API_KEY=...
 
 ### Task 2.1
 
-Identify the port that the new backend will run on inside its container.
+Specify the port that the new backend will run on inside its container.
 
 <details>
 <summary>✅ Solution</summary>
-If you managed to locate the docker file you should there be able to see the exposed port.
 
-<details>
-<summary>Did you not find it? </summary>
-Here it is:
+Here you could assign the application a random port, but one that is normal to assign a backend application and the one that we chose for our solution was **8080**.
 
-```docker
-EXPOSE 8080
+```env
+PORT=8080
+API_KEY=...
 ```
 
-</details>
+As for the _API_KEY_, ask one of us when you have come this far and we will give it to you!
 
 </details>
-As for the API key ask one of us when you have come this far and we will give it to you!
 
-Once you have the environment variables in place, lets try to run the application locally. Move into the `assets/backend-openai` folder and run the following commands:
+Once you have the environment variables in place, lets try to run the application locally. Move into the `assets/backend-openai` folder in your terminal and run the following commands:
 
 ```bash
 npm install
@@ -57,7 +54,10 @@ Create a `dockerfile` for the _backend-openai_ application. Fill in the necessar
 
 <details>
 <summary>Hint</summary>
-You can copy the dockerfile for the static backend and reuse it, only a few adjustments is actually necessary.
+You can copy the dockerfile for the static backend and reuse its content, only a few adjustments is actually necessary.
+
+Specifically, you will need to update the port you just assigned to your new backend applicaiton.
+
 </details>
 
 <details>
@@ -108,7 +108,6 @@ The new service configuration should look something like this:
 
 ```yml
 backend-openai:
-  container_name: codepub-container-workshop-backend-openai
   build:
     dockerfile: backend-openai.dockerfile
     context: applications/backend-openai/
