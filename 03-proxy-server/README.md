@@ -18,7 +18,7 @@ Proxy servers have several benefitial use areas in rela world projects. Such as,
 
 ## Balance traffic between Backends
 
-First things first, we need to update out configuration to now include both backends. So, let's start with uncommenting the static backend in our `docker-compose.yml` file. Make sure to use different host ports for the two backends, i.e. they cannot both use port 8000 on your host computer. You could for instance assign port `8080` to the openAI backend.
+First things first, we need to update our configuration to now include both backends. So, let's start with uncommenting the static backend in our `docker-compose.yml` file. Make sure to use different host ports for the two backends, i.e. they cannot both use port 8000 on your host computer. You could for instance assign port `8080` to the openAI backend.
 
 Let's re-build and see what we are working with - `docker compose up --build`
 
@@ -37,27 +37,8 @@ But, if you would like to see one potential way of solving this we have shared o
 ```js
 ...
 
- async function getRecipe2() {
-    setLoading(true);
-    const requestBody = JSON.stringify({
-      ingredients: ingredients,
-    });
-    await fetch("http://localhost:8080/recipes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: requestBody,
-    })
-      .then((response) => response.json())
-      .then((data) => setRecipe(data))
-      .finally(() => setLoading(false));
-  }
-
-...
-
-<Button onClick={getRecipe}>Get Recipe</Button>
-<Button onClick={getRecipe2}>Get Smart Recipe</Button>
+<Button onClick={() => getRecipe(8000)}>Get Recipe</Button>
+<Button onClick={() => getRecipe(8080)}>Get Smart Recipe</Button>
 
 ...
 ```

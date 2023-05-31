@@ -24,13 +24,13 @@ function App() {
     }
   }
 
-  async function getRecipe() {
+  async function getRecipe(port: number) {
     setLoading(true);
     const requestBody = JSON.stringify({
       ingredients: ingredients,
     });
     try {
-      await fetch("http://localhost:8000/checkLiveness", {
+      await fetch(`http://localhost:${port}/checkLiveness`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ function App() {
     }
 
     try {
-      await fetch("http://localhost:8000/recipes", {
+      await fetch(`http://localhost:${port}/recipes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ function App() {
           <TextField {...params} label="Ingredients" /> // The input field, showing what you type if you're using the built in search function
         )}
       />
-      <Button onClick={getRecipe}>Get Recipe</Button>
+      <Button onClick={() => getRecipe(8000)}>Get Recipe</Button>
       {loadingIndicator()}
       {recipe.title && (
         <Recipe

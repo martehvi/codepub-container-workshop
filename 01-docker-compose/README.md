@@ -13,7 +13,7 @@ Before we delve into the `docker-compose.yml` file lets first run our Backend an
 Lets move into the frontend folder.
 
 1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
-   - The `-t` flag provides the image with a tag which is essentially a name for the image.
+   - The `-t` flag provides the image with a tag which is essentially a name for the image, here you need to specify an apropriate image name such as `-t frontend`.
    - The `.` in the end describes the path to where Docker Engine should find the dockerfile to build the image upon.
    - The `-f` is used to reference the dockerfile name used in the build. This flag is needed when naming the file anything other than the default `dockerfile` value.
 2. Next lets run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
@@ -23,7 +23,7 @@ Lets move into the frontend folder.
 
 Now that you got the frontend up and running, lets do the same for the backend. Change directories into the backend folder and spin up the docker file there as well.
 
-1. Start off with building a docker image by running: `docker build -t <image-tag-name> .`
+1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
 2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
 
 Are they both running? Nice! You should now be able to add ingredients and display the generic static recipe in the browser window!
@@ -129,6 +129,6 @@ services:
 
 Try running `docker compose up --build` this time (_adding the --build flag to ensure that we re-build our docker images_), can you now access the applications? Nice! Now you have successflly exposed the ports and mapped them to your host computer so you can reach them in your browser.
 
-Now you have successfully set up your applications using Docker Copmose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.
+Now you have successfully set up your applications using Docker Compose. As you can see in the Docker Desktop UI you have now containerized and orchestrated multiple containers together.
 
 Let's move into **[Part 2](../02-replace-backend/README.md)**, where we will replace our static backend with a smart one.
