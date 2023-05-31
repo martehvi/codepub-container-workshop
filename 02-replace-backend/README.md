@@ -8,7 +8,7 @@ Don't worry, the backend for this already exists. But there is a few things we n
 
 Some of you may have noticed the `assets` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
 
-Our new backend depend on some environment values that we need to configure. So, start off by moving into the `assets` folder and create a new `.env` file.
+Our new backend depend on some environment values that we need to configure. So, start off by moving into the `assets/backend-openai` folder and create a new `.env` file.
 
 ```shell
 echo > assets/backend-openai/.env
@@ -49,7 +49,7 @@ npm install
 npm start
 ```
 
-Did it work? Cool! Now lets containerize it.
+Did it work? Cool! Now let's containerize it.
 
 ### Task 2.2
 
@@ -117,6 +117,8 @@ backend-openai:
 ```
 
 </details>
+
+TODO: Add running command
 
 Wow, look at that! The recipies you recieve are now actually relevant and useful for the input ingredients.
 Now, for the final part we will use all three applications and even add a fourth service! Lets dive into **[Part 3](../03-proxy-server/README.md)**.
