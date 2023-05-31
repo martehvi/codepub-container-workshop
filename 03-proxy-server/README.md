@@ -64,23 +64,22 @@ But, if you would like to see one potential way of solving this we have shared o
 
 </details>
 
-Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three apllications that all are exposed to your host computer through the port mappings you defined in your compose file. This setup is all well and good for development for hosting your setup locally. But in some cases some applications require higher security with least privilege principle when it comes to access.
-
-So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orhcestration?
+Now you have managed to setup the frontend to make use of both of the containerized backends. Up until this point we have containerized three applications that all are exposed to your host computer through the port mappings you defined in your compose file.
 
 To visualize this is how your applications communicate at this point:
 
 ![Application-structure-1](./../assets/images/application-structure-1.png)
 
-As you can see your applications rely on communicating across your host computers network. To make the containers communicate within the compose setup we need to adjust our current configurations.
+As you can see our architecture is very reliant on communicating across our host computers network. This setup is all well and good for development for hosting your setup locally. However, in some cases some applications require higher security with least privilege principle when it comes to access. So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration? That's what we will do now with Docker `network` and `nginx`. 
 
-To securely isolate and make our appplications independent from localhost you can remove the host part from the port mappings in our configuration. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we only expose the container port to the compose orchestration, and not to your host computer.
+We will start by removing the ports that expose the backend outside of the docker environment. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we expose only the container port to the compose orchestration, and not to your host computer.
 
-### Task 3.1
+### Task 3.2
 
 Remove the the port outside of the compose network from your compose configuration. I.e. the ports that expose your applications to localhost.
 
 <details>
+
 <summary>✅ Solution</summary>
 
 ```yml
@@ -117,40 +116,56 @@ openapi-bakend:
 
 </details>
 
-If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications through your browser. They are now secured but it is hard to work with applications you are not able to reach.
+If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to access any of the applications through your browser. The frontend still tries to contact the backends on `localhost:8000/recipes` and `localhost:8080/recipes`, which are no longer exposed. 
 
 To visualize, this is what the current state of your setup looks like:
 
-![application-structure-2](./../assets/images/application-structure-2.png)
+**[TODO: add an architecture viewing showing that all containers are located on localhost - NOT the picture explaining "client side rendering"]** 
 
-Now that the ports are only exposed within the compose setup,why dont you try to see if they can communicate or reach eachother.
 
-### Task 3.2
+Now that the ports are only exposed within the compose setup, why dont we try to see if we can make the containers communicate and reach eachother internally.
+
+### Task 3.3
 
 Try to ping the backend endpoint `/checkLiveness` from the terminal of your containerized frontend application.
 
+**[TODO: show that we can use public IP to access it here]**
+
+<details>
+<summary>Hint 💡</summary>
+
+With some smart Docker *magic*, containers can communicate by replacing the domain (like `localhost`) with their *container names* (or public IP). Using the relevant container name, we can call the backend using `curl <container-name>:<container-internal-port>/checkLiveness`
+
+You can find all names of your running containers with this command 
+```
+docker ps --format "{{.Names}}"
+```
+
+*NOTE*: we have not applied this magic yet - so no magic yet. This step is to emphasize how the containers know of each other before and after this *magic* ⭐
+</details>
+
 <details>
 <summary>✅ Solution</summary>
-This can be achieved in two ways. Entering the temrinal through the container in `Docker Desktop`, or entering the throgugh terminal commands.
+This can be achieved in two ways. Entering the terminal through the container in `Docker Desktop`, or entering the throgugh terminal commands.
 
 - Enter the frontend through terminal:
 
   1.  Use `docker exec -it <container_id/conainer_name> sh`.
       - `docker exec` is used to execute a command inside a running container.
       - `-it` is a combination of two options. `-i` allows you to interact with the container by providing inout to the command being executed, and `-t` stands for _terminal_
-      - `sh`is the command that will be executed inside the container. `sh` refers to the Uinx shell.
-  2.  Use ping the backend or use curl to reach the `/checkliveness` endpoint.
+      - `sh`is the command that will be executed inside the container. `sh` refers to the Unix shell.
+  2.  Ping the backend or use curl to reach the `/checkliveness` endpoint.
       - To use `curl` you need to install it within the container - `apk add curl`. Then run `curl container-name:8000/checkLiveness`.
       - If using ping, simply run `ping container-name:8000`
 
-- Enter the frontend throuhg `Docker Desktop``
+- Enter the frontend through `Docker Desktop``
   1. Open Docker Desktop. Locate and click on the container running your frontend.
   2. Click on the `terminal` tab and execurte step 2 above.
   </details>
 
-Did it work? probably not. At this point each container exposes their ports but in order to be able to successfully communicate we need to setup a network and instruct our applications to communicate through that network. So, lets do that.
+Did it work? Unfortunately not. In order to be able to successfully communicate using container references we need to setup a network and instruct our applications to communicate through that network. So, lets do that.
 
-### Task 3.3
+### Task 3.4
 
 Add a network to your compose file, and add that network to all applications. Network configurations follow this template:
 
@@ -160,7 +175,7 @@ networks:
     driver: # Specifies the network driver to use for the network. It determines how containers in the network communicate with each other.
 ```
 
-Such a network can be added to a service by referncing the network-name in the `networks` part of the service. You can do this in the same manner as you did with ports.
+Such a network can be added to a service by referencing the network name in the `networks` part of the service. You can do this in the same manner as you did with ports.
 
 <details>
 <summary>✅ Solution</summary>
@@ -205,9 +220,16 @@ networks:
 
 To verify that the applications can reach eachother you can enter the terminal within the frontend application's container and try to ping the backend again ([Task 3.2](#task-32)).
 
-As you could see the containers are now connected within the compose setup. But, we want to bea ble to see or frontend as we did previously, so we need to make it reachable from localhost.
+Now test what happens if you try to use this same logic to update the `App.tsx` call to the backend with this container name reference. You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED". 
+The reason for this, can be explained with the below image  
 
-So, lets make your applications reachable without compromising too much on security. For this we will add a _Proxy Server_ using `nginx`.
+![application-structure-2](./../assets/images/application-structure-2.png)
+
+
+### Task 3.5 Update frontend to reach the internal backend containers using nginx
+As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step. 
+
+So, lets make the reachable without compromising too much on security. For this we will add a Proxy Server using **nginx**.
 
 <details>
 <summary>What is nginx? 🤔</summary>
@@ -216,9 +238,151 @@ So, lets make your applications reachable without compromising too much on secur
 
 </details>
 
-**TODO add nginx part with description and tasks **
+**a) Adding the nginx to the docker network:**
+We want to add the nginx server as part of our docker network, so that it has access to the mapping we have done which allows us to reach the backend containers with their container names. 
+We have chosen to use one of Dockers premade image, `nginx:1.16.0-alpine`.
+
+Try now to finish the configuration for the nginx container in the docker compose file by adding ports and network to it. We have added in the new parameters `image` for you - so now you simply need to add a fitting port mapping (choose whichever, but our solution has used the port `8003` for both external and internal). 
+
+<summary>Template</summary>
+
+```yml
+services:
+  ...
+  nginx:
+    image: nginx:1.16.0-alpine
+    ports: 
+      - 
+    networks: 
+      - 
+  ...
+```
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+version: "3"
+services:
+  ...
+  nginx:
+    image: nginx:1.16.0-alpine
+    ports:
+      - "8003:8003"
+    networks:
+      - mynet
+  ...
+```
+</details>
+
+**b) Remapping the HTTP request with nginx proxying:**
+Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `ngnix.conf`. Let's add a server that listens to port `8003`, and checks the liveness endpoint by addin a `location` and redirects traffic to the container with the simple backend (first backend we used). Below is a template you can use for the `nginx.conf` file:
+
+
+```yml
+server {
+  listen <INSERT_PORT_HERE>;
+
+  location /<INSERT_ENDPOINT_HERE> {
+    proxy_pass http://<CONTAINER_NAME>:<CONTAINER_INTERNAL_PORT>/checkLiveness
+  }
+}
+```
+
+<details>
+<summary>Hint 💡</summary>
+
+The container name is `codepub-container-workshop-react-backend` and the relevant port (internal in the network) is `8000`
+</details>
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+server {
+  listen 8003;
+
+  location /recipes {
+    proxy_pass http://codepub-container-workshop-react-backend:8000/recipes
+  }
+}
+```
+</details>
+
+**c) Add our nginx config to the container:**
+Now, add this config file as part of the nginx container in the `docker-compose.yml`. This can be done by adding the file as part of the `volumes`.
+
+A **volume** is a storage accessible for the container, which does not get deleted when the container shuts down, unlike everything else related to the container. In this example, we'll use a volume to add our proxy configuration file to the container. 
+
+Explanation of the `volumes` parameter in the docker-compose.yml file: 
+- first part (before `:`) `./nginx.conf` is which local file you want to be copied to the container
+- second part, `/etc/nginx/conf.d/default.conf`, is the file on the container that the content will be copied/added to.
+- third part, `ro` means `read-only` after the file has been mounted
+
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+version: "3"
+services:
+  ...
+  nginx:
+    image: nginx:1.16.0-alpine
+    volumes: 
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8003:8003"
+    networks:
+      - mynet
+  ...
+```
+</details>
+
+Now, test if this remapping has solved our problem with not accessing backend from the frontend 🤓 We need one final step in our setup, namely to change which url the frontend calls. It should now be changed from `localhost:8000/recipes` to the url nginx now runs on. 
+
+<details>
+<summary>Hint 💡</summary>
+
+Nginx is running on `localhost:8003`, and the endpoint is the same. The frontend logic that needs changing is in `App.tsx`
+</details>
+
+**d) Add redirecting between two different frontends from the same server:**
+Now we want to use this same localhost:8003 to redirect the traffic for the two different backends when the user clicks the two different "Get recipe" buttons in frontend. There is several ways to do this, and our solution has chosen to use `v1` and `v2` tags in the url to differentiate. Try to now finish the nginx.conf file.  
+
+Hint: you can duplicate the already existing proxy_pass we configured. The one already configured can now be renamed to `/v1/...`.
+
+<details>
+<summary>✅ Solution</summary>
+
+```yml
+server {
+  listen 8003;
+
+  location /v1/recipe {
+    proxy_pass http://codepub-container-workshop-react-backend:8000/recipe
+  }
+
+  location /v2/recipe {
+    proxy_pass http://codepub-container-workshop-openai-backend:8080/recipe
+  }
+}
+```
+</details>
+
+**e) Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint. 
+
+**[Add in solution - should we have the whole file?]**
+
+Now try spinning up everything with `docker compose up --build` and click the two buttons.
 
 This is how your final setup looks like.
 ![application-structure-3](./../assets/images/application-structure-3.png)
 
-Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new ansdexiting, and had fun doing so!
+Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so!
+
+
+
+
+
+

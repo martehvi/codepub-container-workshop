@@ -1,35 +1,24 @@
-# Planning session 
+# Docker Compose Workshop
 
-Ønsker å bygge videre på det som allerede ble laget i tidligere TechCollege 
+This is a Docker Workshp where you will learn how to containerize and orchestrate a multi-service application using **Docker Compose**. Docker compose is a tool that allows you to define and run multi-container Docker applications. It simplifies the process of managing multiple containers, their dependencies, networks, and volumes, making it easier to develop and deploy complex applicaitons. In this workshop we will make use of Docker Compose to set-up and manage our services, or _applications_ as we call them in this repo.
 
-Nå vil vi sette opp ting i Docker Compose
+## Application Overview
 
-1. Utgangspunkt: vi har allerede spint opp, der det er 2 containere, med Docker Compose og alt slik at dette kjører og fungerer. 
+Lets take a look at the three applications involved in this workshop:
 
-| Frontend | - | Backend | 
+- **Frontend:** This is a Cookbook application where users can enter a list of ingredients and receive a recipe in return. Initially, we will set up the frontend to interact with the static backend
 
+- **Static Backend:** The static backend serves as a simple starting point. It provides the frontend with a predefined, generic recipe.
 
-2. Vi skal nå erstatte/oppdatere backenden, slik at den nå kan bruke ChatGPT! 
-    - Steg 0: To containere satt opp med Docker Compose, v1 backend 
-     | Frontend | < http://localhost:8080-> | Backend v1| 
-    - Steg 1: Erstatt gammel backend container med ChatGPT v2 backend, spinn opp i Docker Compose
-    | Frontend | <-http://localhost:8080> | Backend v2 | 
-    - Steg 2: Ha begge backendene oppe i Docker Compose, og legg til en load balancer - dette legges til i Docker Compose
-    | Frontend | <-http://localhost:8080/v1 ELLER http://localhost:8080/v1 > | Backend v1 | ELLER | Backend v2 | 
+- **OpenAI Backend:** A _smart, dynamic_ backend leveraging OpenAI technology. The OpenAI backend uses machine learning algorithms to generate recipes dynamically based on the provided ingredients.
 
+## Pre-requisites
 
+- _Docker Desktop (or similar)_ - Install a container image build tool and _container runtime_, the simplest beeing the all-in-one solution Docker Desktop. If using any other container image build tool or runtime, be sure to adapt the workshop's docker commands to fit your tools.
+- _Git_ - as you probably want to git clone https://gitlab.netlight.com/mhau/codepub-container-workshop.git
 
-Diskuterte rundt om vi skulle ha imagene publisert på dockerhub - men siden det både er litt privacy-problem hvis vi har openAI keys, så kan vi istedet bruke Docker Desktop - der etter `docker build image "navn"` så er denne "Publisert" i Docker Desktop - og kan brukes i Docker Compose 
+## Content
 
-
-Diskusjon rundt ChatGPT tokenet: 
-- siden vi ikke vil ha det public (hverken på dockerhub eller github), så kan vi få alle til å bruke sine egne ChatGPT tokens, og legge det til manuelt i docker imaget! Det gir studentene muligheten til å lære seg
-`docker exec/ssh` `vim env` => erstatte "{YOUR_API_KEY}" med din egen i denne filen
-
-
-TO DO: 
-- Lage Docker compose fil for applikasjonene som var laget i tidligere TechCollege
-
-
-# Setting up repo on your computer:
-After cloning the repo, it should be sufficient to run `docker compose up` inside the repo root folder. Assumed that you already have Docker with Compose plugin setup 
+1. [Docker Compose](../01-docker-compose/README.md)
+2. [Replace Backend](../02-replace-backend/README.md)
+3. [Proxy server](../03-proxy-server/README.md)
