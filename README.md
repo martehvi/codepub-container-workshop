@@ -1,10 +1,10 @@
 # Docker Compose Workshop
 
-This is a Docker Workshp where you will learn how to containerize and orchestrate a multi-service application using **Docker Compose**. Docker compose is a tool that allows you to define and run multi-container Docker applications. It simplifies the process of managing multiple containers, their dependencies, networks, and volumes, making it easier to develop and deploy complex applicaitons. In this workshop we will make use of Docker Compose to set-up and manage our services, or _applications_ as we call them in this repo.
+This is a Docker Workshop where you will learn how to containerize and orchestrate a multi-service application using **Docker Compose**. Docker compose is a tool that allows you to define and run multi-container Docker applications. It simplifies the process of managing multiple containers, their dependencies, networks, and volumes, making it easier to develop and deploy complex applicaitons. In this workshop we will make use of Docker Compose to set-up and manage our services, or _applications_ as we call them in this repo.
 
 ## Application Overview
 
-Lets take a look at the three applications involved in this workshop:
+Let's take a look at the three applications involved in this workshop:
 
 - **Frontend:** This is a Cookbook application where users can enter a list of ingredients and receive a recipe in return. Initially, we will set up the frontend to interact with the static backend
 
@@ -19,6 +19,6 @@ Lets take a look at the three applications involved in this workshop:
 
 ## Content
 
-1. [Docker Compose](../01-docker-compose/README.md)
-2. [Replace Backend](../02-replace-backend/README.md)
-3. [Proxy server](../03-proxy-server/README.md)
+1. [Docker Compose](01-docker-compose/README.md)
+2. [Replace Backend](02-replace-backend/README.md)
+3. [Proxy server](03-proxy-server/README.md)
