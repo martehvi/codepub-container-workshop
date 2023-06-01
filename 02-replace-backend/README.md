@@ -83,7 +83,7 @@ backend-openai:
 
 </details>
 
-TODO: Add running command
+Having now added the new backend to your Compose setup, try running `docker-compose up --build` and try fetching a recipe! _**NOTE:** This might take up to 20 seconds as the new backend relies on OpenAI, which is not the fastest at generating responses...._
 
 Wow, look at that! The recipies you receive are now actually relevant and useful for the input ingredients.
 Now, for the final part we will use all three applications and even add a fourth service! Lets dive into **[Part 3](../03-proxy-server/README.md)**.
