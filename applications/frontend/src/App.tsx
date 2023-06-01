@@ -35,7 +35,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-      }).then(() => setLoading(false));
+      });
     } catch (error) {
       console.error("Failed to execute the first fetch call:", error);
     }
@@ -58,7 +58,7 @@ function App() {
 
   return (
     <>
-      <Box>Andrea's Magic Cookbook</Box>
+      <Box>Codepub's Magic Cookbook</Box>
       <Autocomplete
         multiple // Allows you to select multiple items
         filterSelectedOptions // Filters out selected items
