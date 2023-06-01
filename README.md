@@ -14,8 +14,8 @@ Lets take a look at the three applications involved in this workshop:
 
 ## Pre-requisites
 
-- _Docker Desktop (or similar)_ - Install a container image build tool and _container runtime_, the simplest beeing the all-in-one solution Docker Desktop. If using any other container image build tool or runtime, be sure to adapt the workshop's docker commands to fit your tools.
-- _Git_ - as you probably want to git clone https://gitlab.netlight.com/mhau/codepub-container-workshop.git
+- _Docker Desktop (or similar)_ - Install a container image build tool and _container runtime_, the simplest beeing the all-in-one solution [Docker Desktop](https://www.docker.com/products/docker-desktop/). If using any other container image build tool or runtime, be sure to adapt the workshop's docker commands to fit your tools.
+- _Git_ - as you probably want to git clone the repo - [codepub-container-workshop](https://github.com/martehvi/codepub-container-workshop).
 
 ## Content
 

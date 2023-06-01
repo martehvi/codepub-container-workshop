@@ -10,23 +10,23 @@ Before we delve into the `docker-compose.yml` file lets first run our Backend an
 
 ### Frontend
 
-Lets move into the frontend folder.
+Lets move into the frontend folder - `cd applications/frontend/`
 
-1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
+1. Start off with building a docker image by running: `docker build -t my-cool-frontend -f dockerfile .`
    - The `-t` flag provides the image with a tag which is essentially a name for the image, here you need to specify an apropriate image name such as `-t frontend`.
    - The `.` in the end describes the path to where Docker Engine should find the dockerfile to build the image upon.
    - The `-f` is used to reference the dockerfile name used in the build. This flag is needed when naming the file anything other than the default `dockerfile` value.
-2. Next lets run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
+2. Next lets run the image we just built by using: `docker run -p 3000:3000 -t my-cool-frontend`
    - The `-p` flag exposes a port on your local machine and maps it to a port on the docker container. The mapping uses the format, `<host-port>:<container-port>`.
 
 ### Backend
 
-Now that you got the frontend up and running, lets do the same for the backend. Change directories into the backend folder and spin up the docker file there as well.
+Now that you got the frontend up and running, lets do the same for the backend. Change directories into the backend folder (`cd ../backend/`) and spin up the docker file there as well.
 
-1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
-2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
+1. Start off with building a docker image by running: `docker build -t my-awesome-backend -f backend.dockerfile .`
+2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t my-awesome-backend`
 
-Are they both running? Nice! You should now be able to add ingredients and display the generic static recipe in the browser window!
+Are they both running? Nice! You should now be able to add ingredients and display the generic static recipe in the browser window through `localhost:3000` where we are hosting our frontend!
 
 > **NB**: Remember to _kill off any running containers_ before continuing. The containers willrun until they are manually shutdown. You can manually shut down your running frontend and backend by using the `ctrl+C` in the running treminal or stopping them in using the stop button in Docker Desktop.
 
@@ -41,10 +41,11 @@ Once you have found and opened it you should see a pretty empty configuration wh
 You can add a service using the following template:
 
 ```yml
-service-name:
-  build:
-    dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
-    context: # Specifies the path to the directory containing the Dockerfile and the build context.
+services:
+  your-service-name-here:
+    build:
+      dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
+      context: # Specifies the path to the directory containing the Dockerfile and the build context.
 ```
 
 ### Task 1.1
@@ -106,6 +107,7 @@ service-name:
 
 <details>
 <summary>✅ Solution</summary>
+
 At the end of this task you should have a `docker-compose.yml` file that looks like this:
 
 ```yml
