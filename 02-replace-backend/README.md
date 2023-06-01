@@ -8,41 +8,9 @@ Don't worry, the backend for this already exists. But there is a few things we n
 
 Some of you may have noticed the `assets` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
 
-Our new backend depend on some environment values that we need to configure. So, start off by moving into the `assets/backend-openai` folder and create a new `.env` file.
+Our new backend depend on some environment variables that we need to configure. So, start off by moving into the `assets` folder and add the missing environment variable.
 
-```shell
-echo > assets/backend-openai/.env
-```
-
-Open the file and enter the following content:
-
-```env
-PORT=...
-API_KEY=...
-```
-
-### Task 2.1
-
-Identify the port that the new backend will run on inside its container.
-
-<details>
-<summary>✅ Solution</summary>
-If you managed to locate the dockerfile you should there be able to see the exposed port.
-
-<details>
-<summary>Did you not find it? </summary>
-Here it is:
-
-```docker
-EXPOSE 8080
-```
-
-</details>
-
-</details>
-As for the API key, ask one of us when you have come this far and we will give it to you!
-
-Once you have the environment variables in place, let's try to run the application locally. Move into the `assets/backend-openai` folder and run the following commands:
+Once you have the this in place, let's try to run the application locally. Move into the `assets/backend-openai` folder in your terminal and run the following commands:
 
 ```bash
 npm install
@@ -51,14 +19,12 @@ npm start
 
 Did it work? Cool! Now let's containerize it.
 
-### Task 2.2
+### Task 2.1
 
 Create a `dockerfile` for the _backend-openai_ application. Fill in the necessary contents.
 
-<details>
-<summary>Hint</summary>
-You can copy the dockerfile for the static backend and reuse it, only a few adjustments is actually necessary.
-</details>
+> **Hint**:
+> You can copy the dockerfile for the static backend and reuse its content.
 
 <details>
 <summary>Solution ✅</summary>
@@ -98,7 +64,7 @@ Let's start by commenting out the old backend service (_Tip: Don't erase it! It 
 
 Starting out with a new empty service shell, we need to add the build configuration as we just did for the two first services.
 
-### Task 2.3
+### Task 2.2
 
 Create a new service in the Docker Compose file for our new backend. Remember to add port a mapping to localhost.
 
@@ -108,12 +74,11 @@ The new service configuration should look something like this:
 
 ```yml
 backend-openai:
-  container_name: codepub-container-workshop-backend-openai
   build:
     dockerfile: backend-openai.dockerfile
     context: applications/backend-openai/
   ports:
-    - "8080:8080"
+    - "8000:8000"
 ```
 
 </details>
