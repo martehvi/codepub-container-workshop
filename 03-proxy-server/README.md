@@ -55,6 +55,15 @@ To visualize this is how your applications communicate at this point:
 
 ![Application-structure-3.1](./../assets/images/application-structure-3_1.png)
 
+<details>
+<summary>For the curios ones 🙋‍♀️🙋‍♂️</summary>
+
+If you study the Figure above, you might wonder why the backend is called from the WWW client, and not directly from the `frontend` container. This is because of the frontend framework we are using, React. React uses **client side rendering**. We do not need to worry about this now - but later in this workshop this will force us to solve our architecture a lil bit different. Wait and see for [Task 3.3](#task-33) and [Task 3.4](#task-34-update-frontend-to-reach-the-internal-backend-containers-using-nginx) 😏
+
+</details>
+
+---
+
 As you can see our architecture is very reliant on communicating across our host computers network. This setup is all well and good for development for hosting your setup locally. However, in some cases some applications require higher security with least privilege principle when it comes to access. So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration? That's what we will do now with Docker `network` and `nginx`.
 
 We will start by removing the ports that expose the backend outside of the docker environment. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we expose only the container port to the compose orchestration, and not to your host computer.
