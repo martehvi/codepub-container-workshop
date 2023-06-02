@@ -53,7 +53,7 @@ Now you have managed to setup the frontend to make use of both of the containeri
 
 To visualize this is how your applications communicate at this point:
 
-![Application-structure-1](./../assets/images/application-structure-1.png)
+![Application-structure-3.1](./../assets/images/application-structure-3_1.png)
 
 As you can see our architecture is very reliant on communicating across our host computers network. This setup is all well and good for development for hosting your setup locally. However, in some cases some applications require higher security with least privilege principle when it comes to access. So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration? That's what we will do now with Docker `network` and `nginx`.
 
@@ -94,9 +94,9 @@ openapi-bakend:
 
 If you try running your compose setup now what happens? As you probably realized since you no longer expose any ports to your host computer you are not able to reach the backends through your browser. The frontend still tries to contact them on `localhost:8000/recipes` and `localhost:8080/recipes`, which are no longer exposed.
 
-To visualize, this is what the current state of your setup looks like:
+To visualize, this is what the current state of your setup looks like, where frontend points to now un-exposed ports:
 
-**[TODO: add an architecture viewing showing that all containers are located on localhost - NOT the picture explaining "client side rendering"]**
+![Application-structure-3.2](./../assets/images/application-structure-3_2.png)
 
 Now that the ports are only exposed within the compose setup, why dont we try to see if we can make the containers communicate and reach eachother internally.
 
@@ -149,9 +149,13 @@ Open the `App.tsx` file and change the calls from `localhost` to `container-name
 You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED".
 The reason for this, can be explained with the below image
 
-![application-structure-2](./../assets/images/application-structure-2.png)
+![application-structure-3.3](./../assets/images/application-structure-3_3.png)
 
-### Task 3.5 Update frontend to reach the internal backend containers using nginx
+React does "client side rendering", meaning that the frontend webpage is running locally on your machine. It has no knowledge of any container names or network, since that only exists inside of Docker. *So although the frontend container is able to `curl` both backends successfully, the `getRecipe({port})` call is called "outside", and does not reach the containers*.
+
+The webpage can only reach docker applications through ports exposed outside of Docker, like `localhost:3000`, not things referring to container names like `backend:8000`.
+
+### Task 3.4 Update frontend to reach the internal backend containers using nginx
 
 As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step.
 
@@ -318,6 +322,6 @@ proxy_pass http://openapi-bakend:8080/recipe;
 Now try spinning up everything with `docker compose up --build` and click the two buttons.
 
 This is how your final setup looks like.
-![application-structure-3](./../assets/images/application-structure-3.png)
+![application-structure-3.4](./../assets/images/application-structure-3_4.png)
 
 Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so!
