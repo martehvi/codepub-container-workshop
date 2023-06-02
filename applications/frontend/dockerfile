@@ -13,6 +13,8 @@ COPY [ "package.json", "package-lock.json", "tsconfig.json", "./" ]
 # ==== BUILD =====
 # Install dependencies with the same command as you used locally
 RUN npm install
+# Add curl, since we will need this in part 3.
+RUN apk add curl
 
 COPY src src
 

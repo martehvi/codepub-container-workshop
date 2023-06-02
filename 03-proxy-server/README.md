@@ -102,14 +102,14 @@ Now that the ports are only exposed within the compose setup, why dont we try to
 
 ### Task 3.3
 
-Try to ping the backend endpoint `/checkLiveness` from the terminal of your containerized frontend application.
-
-**[TODO: show that we can use public IP to access it here]**
+Try to reach the backend endpoint `/checkLiveness` from the terminal of your containerized frontend application using `curl`.
 
 <details>
-<summary>Hint 💡</summary>
+<summary>Hint 💡 - Not sure how to use curl? </summary>
 
-With some smart Docker _magic_, containers can communicate by replacing the domain (like `localhost`) with their _container names_ (or public IP). Using the relevant container name, we can call the backend using `curl <container-name>:<container-internal-port>/checkLiveness`.
+With some Docker Compose _magic_, containers can communicate with eachother by using their _container names_ (or service names). By default, services in the same Docker Compose file are placed in the same network. In a basic Docker setup you would have to configure this network yourself - another perk of using Docker Compose.
+
+For example, we can call the backend using `curl <container-name>:<container-internal-port>/checkLiveness`.
 
 You can find all names of your running containers with this command
 
@@ -117,7 +117,7 @@ You can find all names of your running containers with this command
 docker ps --format "{{.Names}}"
 ```
 
-_NOTE_: we have not applied this magic yet - so no magic yet. This step is to emphasize how the containers know of each other before and after this _magic_ ⭐
+or simply by using the service name you chose when setting up your compose file.
 
 </details>
 
@@ -130,18 +130,21 @@ This can be achieved in two ways. Entering the terminal through the container in
   1.  Use `docker exec -it <container_id/conainer_name> sh`.
       - `docker exec` is used to execute a command inside a running container.
       - `-it` is a combination of two options. `-i` allows you to interact with the container by providing inout to the command being executed, and `-t` stands for _terminal_
-      - `sh`is the command that will be executed inside the container. `sh` refers to the Unix shell.
-  2.  Ping the backend or use curl to reach the `/checkliveness` endpoint.
-      - To use `curl` you need to install it within the container - `apk add curl`. Then run `curl container-name:8000/checkLiveness`.
-      - If using ping, simply run `ping container-name:8000`
+      - `sh` is the command that will be executed inside the container. `sh` refers to the Unix shell.
+  2.  Use curl to reach the `/checkliveness` endpoint.
+      - Run `curl codepub-frontend:8000/checkLiveness`.
 
 - Enter the frontend through `Docker Desktop``
   1. Open Docker Desktop. Locate and click on the container running your frontend.
   2. Click on the `terminal` tab and execurte step 2 above.
-    </details>
-  Now that we know they can reach eachother internally we need to also update the frontend call to reference the container name, as it is currently referencing `localhost`.
 
-Open the `App.tsx` file and change the calls from `localhost` to `container-name`.
+</details>
+
+If you are familiar with using Docker you may wonder why this worked since we did not configure a network for the containers to communicat arcross. This is one more benefit of using _Docker Compose_, as it by default configures a network between containers in the same orchestration!
+
+Now that we know they can reach eachother internally we need to also update the frontend call to reference the container name, as it is currently referencing `localhost`.
+
+Open the `App.tsx` file and change the calls from `localhost` to `container-name` in the `getRecipe` input props in the button component.
 
 You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED".
 The reason for this, can be explained with the below image
