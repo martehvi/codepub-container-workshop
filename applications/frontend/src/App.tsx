@@ -24,7 +24,7 @@ function App() {
     }
   }
 
-  async function getRecipe(ipAddress: string, port: number) {
+  async function getRecipe(ipAddress: string, port: number, version?: string) {
     setLoading(true);
     const requestBody = JSON.stringify({
       ingredients: ingredients,
@@ -41,7 +41,7 @@ function App() {
     }
 
     try {
-      await fetch(`http://${ipAddress}:${port}/recipes`, {
+      await fetch(`http://${ipAddress}:${port}/${version}/recipes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
