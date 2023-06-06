@@ -74,7 +74,7 @@ To visualize this is how your applications communicate at this point:
 <details>
 <summary>For the curious ones 🙋‍♀️🙋‍♂️</summary>
 
-If you study the Figure above, you might wonder why the backend is called from the WWW client, and not directly from the `frontend` container. This is because of the frontend framework we are using, React. React uses **client side rendering**. We do not need to worry about this now - but later in this workshop this will force us to solve our architecture a lil bit different. Wait and see for [Task 3.3](#task-33) and [Task 3.4](#task-34-update-frontend-to-reach-the-internal-backend-containers-using-nginx) 😏
+If you study the Figure above, you might wonder why the backend is called from the WWW client, and not directly from the `frontend` container. This is because of the frontend framework we are using, React. React uses **client side rendering**. We do not need to worry about this now - but later in this workshop this will force us to solve our architecture a lil bit different. Wait and see for [Task 3.3](#task-33-test-out-multi-container-communication) and [Task 3.4](#task-34-update-frontend-to-reach-the-internal-backend-containers-using-nginx) 😏
 
 </details>
 
