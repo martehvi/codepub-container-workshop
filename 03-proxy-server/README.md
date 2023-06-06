@@ -258,14 +258,14 @@ services:
 **b) Remapping the HTTP request with nginx proxying:**
 Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `nginx.conf` in the project root.
 
-Let's start by adding a server that listens to port `8003`, and checks the liveness endpoint by adding a `location` and redirects traffic to the container with the simple backend (first backend we used). Below is a template you can use for the `nginx.conf` file:
+Let's start by adding a server that listens to port `8003`, and checks the endpoint by adding a `location` and redirects traffic to the container with the simple backend (first backend we used). Below is a template you can use for the `nginx.conf` file:
 
 ```yml
 server {
-  listen <INSERT_PORT_HERE>;
+  listen <insert_port_here>;
 
-  location /<INSERT_ENDPOINT_HERE> {
-    proxy_pass http://<CONTAINER_NAME>:<CONTAINER_INTERNAL_PORT>/recipes;
+  location /<insert_endpoint_here> {
+    proxy_pass http://<container_name>:<container_internal_port>/<insert_endpoint_here>;
   }
 }
 ```
@@ -273,7 +273,9 @@ server {
 <details>
 <summary>Hint 💡</summary>
 
-The container name is `codepub-backend` and the relevant port (internal in the network) is `8000`
+The container name is `codepub-backend` and the relevant port (internal in the network) is `8000`. 
+
+To test if the redirection works easily you can use the endpoint `checkLiveness`. For the actual implementation, the redirection should point to the endpoint `recipes` used earlier.
 
 </details>
 
