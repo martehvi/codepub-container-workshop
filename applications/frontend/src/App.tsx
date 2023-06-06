@@ -1,13 +1,13 @@
+import "./App.css";
 import { Box } from "@mui/system";
-import {
-  Autocomplete,
-  Button,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import { CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { useState } from "react";
-import Recipe, { RecipeData } from "./Components/Recipe";
-import IngredientOptions from "./files/Ingredients.json";
+import Recipe from "./Components/Recipe";
+import Background from "./Components/Background";
+import Header from "./Components/Header";
+import SearchBox from "./Components/SearchBox";
+import { RecipeData } from "./Components/Query";
+import Button from "./Components/Button";
 
 function App() {
   const [recipe, setRecipe] = useState({} as RecipeData);
@@ -57,32 +57,43 @@ function App() {
   }
 
   return (
-    <>
-      <Box>Codepub's Magic Cookbook</Box>
-      <Autocomplete
-        multiple // Allows you to select multiple items
-        filterSelectedOptions // Filters out selected items
-        disableCloseOnSelect // Prevents closing the dropdown menu on selecting an item
-        options={IngredientOptions} // The options shown in the dropdown menu
-        onChange={(event: any, newValue: string[]) => {
-          // Handles changes, allowing you to set a state with the new values
-          setIngredients(newValue); // Here we're using a [ingredient, setIngredient] = useState([""]) state
+    <Container disableGutters sx={{ margin: 0 }}>
+      <Background />
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          width: "100%",
         }}
-        renderInput={(params) => (
-          <TextField {...params} label="Ingredients" /> // The input field, showing what you type if you're using the built in search function
-        )}
-      />
-      <Button onClick={() => getRecipe("localhost", 8000)}>Get Recipe</Button>
-      {loadingIndicator()}
-      {recipe.title && (
-        <Recipe
-          title={recipe.title}
-          description={recipe.description}
-          ingredients={recipe.ingredients}
-          steps={recipe.steps}
-        />
-      )}
-    </>
+      >
+        <Grid container spacing={2} paddingTop={4} justifyContent={"center"}>
+          <Header name={"Codepub's Magic Cookbook"} />
+          <Grid
+            width={1}
+            display={"flex"}
+            padding={4}
+            gap={2}
+            justifyContent={"center"}
+          >
+            <SearchBox setIngredients={setIngredients} />
+            <Button onClick={() => getRecipe("localhost", 8000)}>
+              Get Recipe
+            </Button>
+          </Grid>
+          <Grid width={1} alignContent={"center"}>
+            {loadingIndicator()}
+            {recipe.title && (
+              <Recipe
+                title={recipe.title}
+                description={recipe.description}
+                ingredients={recipe.ingredients}
+                steps={recipe.steps}
+              />
+            )}
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 }
 
