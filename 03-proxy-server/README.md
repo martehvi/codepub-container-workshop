@@ -160,7 +160,7 @@ The reason for this, can be explained with the below image
 
 ![application-structure-3.3](./../assets/images/application-structure-3_3.png)
 
-React does "client side rendering", meaning that the frontend webpage is running locally on your machine. It has no knowledge of any container names or network, since that only exists inside of Docker. *So although the frontend container is able to `curl` both backends successfully, the `getRecipe({port})` call is called "outside", and does not reach the containers*.
+React does "client side rendering", meaning that the frontend webpage is running locally on your machine. It has no knowledge of any container names or network, since that only exists inside of Docker. _So although the frontend container is able to `curl` both backends successfully, the `getRecipe({port})` call is called "outside", and does not reach the containers_.
 
 The webpage can only reach docker applications through ports exposed outside of Docker, like `localhost:3000`, not things referring to container names like `backend:8000`.
 
@@ -293,17 +293,10 @@ services:
 
 Now, test if this remapping has solved our problem with not accessing backend from the frontend 🤓 We need one final step in our setup, namely to change which url the frontend calls. It should now be changed from `localhost:8000/recipes` to the url nginx now runs on.
 
-<details>
-<summary>Hint 💡</summary>
-
-Nginx is running on `localhost:8003`, and the endpoint is the same. The frontend logic that needs changing is in `App.tsx`
-
-</details>
-
 **d) Add redirecting between two different frontends from the same server:**
 Now we want to use this same localhost:8003 to redirect the traffic for the two different backends when the user clicks the two different "Get recipe" buttons in frontend. There is several ways to do this, and our solution has chosen to use `v1` and `v2` tags in the url to differentiate. Try to now finish the nginx.conf file.
 
-Hint: you can duplicate the already existing proxy_pass we configured. The one already configured can now be renamed to `/v1/...`.
+> Hint: You can duplicate the already existing proxy_pass we configured. The one already configured can now be renamed to `/v1/...`.
 
 <details>
 <summary>✅ Solution</summary>
@@ -324,9 +317,39 @@ proxy_pass http://openapi-bakend:8080/recipe;
 
 </details>
 
-**e) Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint.
+**e) Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint for the two backend versions. We pointed at in the `nginx.conf` in the previous task.
 
-**[Add in solution - should we have the whole file?]**
+> Hint: You need to extend your `getRecipe()`-function implementation and function-calls to make use of the optional `version`-prop.
+>
+> Here you need to update the url where we fetch from the `/recipe` endpoint. Add the version prop to the correct location in the url like this - `/${version}/recipe`
+
+<details>
+
+<summary>✅ Solution</summary>
+Your api call should now include the version prop and the Button components should include extended function calls that make use of the optional `version`-property, and look like this:
+
+```js
+...
+await fetch(`http://${ipAddress}:${port}/${version}/recipes`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: requestBody,
+})
+
+...
+<Button onClick={() => getRecipe("localhost", 8000, "v1")}>
+Get Recipe
+</Button>
+<Button onClick={() => getRecipe("localhost", 8080, "v2")}>
+Get Smart Recipe
+</Button>
+...
+
+```
+
+</details>
 
 Now try spinning up everything with `docker compose up --build` and click the two buttons.
 

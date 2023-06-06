@@ -8,7 +8,7 @@ Don't worry, the backend for this already exists. But there is a few things we n
 
 Some of you may have noticed the `assets` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
 
-Our new backend depend on some environment variables that we need to configure. So, start off by moving into the `assets` folder and add the missing environment variable.
+Our new backend depend on some environment variables that we need to configure. So, start off by moving into the `assets/backend-openai` folder and add the missing environment variable in the `.env`-file.
 
 Once you have the this in place, let's try to run the application locally. Move into the `assets/backend-openai` folder in your terminal and run the following commands:
 
@@ -42,7 +42,7 @@ WORKDIR /app/backend
 
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 8000
 
 CMD [ "npm", "start" ]
 
