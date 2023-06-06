@@ -41,7 +41,7 @@ function App() {
     }
 
     try {
-      await fetch(`http://${ipAddress}:${port}/${version}/recipes`, {
+      await fetch(`http://${ipAddress}:${port}/recipes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
