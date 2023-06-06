@@ -53,7 +53,7 @@ Now you have managed to setup the frontend to make use of both of the containeri
 
 To visualize this is how your applications communicate at this point:
 
-![Application-structure-3.1](./../assets/images/application-structure-3_1.png)
+![Application-structure-3.1](./../assets/images/application-structure-3_1.PNG)
 
 <details>
 <summary>For the curios ones 🙋‍♀️🙋‍♂️</summary>
@@ -105,7 +105,7 @@ If you try running your compose setup now what happens? As you probably realized
 
 To visualize, this is what the current state of your setup looks like, where frontend points to now un-exposed ports:
 
-![Application-structure-3.2](./../assets/images/application-structure-3_2.png)
+![Application-structure-3.2](./../assets/images/application-structure-3_2.PNG)
 
 Now that the ports are only exposed within the compose setup, why dont we try to see if we can make the containers communicate and reach eachother internally.
 
@@ -158,7 +158,7 @@ Open the `App.tsx` file and change the calls from `localhost` to `container-name
 You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED".
 The reason for this, can be explained with the below image
 
-![application-structure-3.3](./../assets/images/application-structure-3_3.png)
+![application-structure-3.3](./../assets/images/application-structure-3_3.PNG)
 
 React does "client side rendering", meaning that the frontend webpage is running locally on your machine. It has no knowledge of any container names or network, since that only exists inside of Docker. _So although the frontend container is able to `curl` both backends successfully, the `getRecipe({port})` call is called "outside", and does not reach the containers_.
 
@@ -354,6 +354,6 @@ Get Smart Recipe
 Now try spinning up everything with `docker compose up --build` and click the two buttons.
 
 This is how your final setup looks like.
-![application-structure-3.4](./../assets/images/application-structure-3_4.png)
+![application-structure-3.4](./../assets/images/application-structure-3_4.PNG)
 
 Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so!
