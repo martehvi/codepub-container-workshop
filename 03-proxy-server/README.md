@@ -361,12 +361,12 @@ Now we want to use this same `localhost:8003` to redirect the traffic for the tw
 server {
   listen 8003;
 
-  location /v1/recipe {
-    proxy_pass http://codepub-backend:8000/recipe;
+  location /v1/recipes {
+    proxy_pass http://codepub-backend:8000/recipes;
   }
 
-  location /v2/recipe {
-    proxy_pass http://openai-backend:8080/recipe;
+  location /v2/recipes {
+    proxy_pass http://openai-backend:8080/recipes;
   }
 }
 ```
@@ -377,7 +377,7 @@ server {
 
 > Hint: You need to extend your `getRecipe()`-function implementation and function-calls to make use of the optional `version`-prop.
 >
-> Here you need to update the url where we fetch from the `/recipe` endpoint. Add the version prop to the correct location in the url like this - `/${version}/recipe`
+> Here you need to update the url where we fetch from the `/recipes` endpoint. Add the version prop to the correct location in the url like this - `/${version}/recipes`
 
 <details>
 
@@ -407,10 +407,10 @@ Get Smart Recipe
 
 </details>
 
-Now try spinning up everything with `docker compose up --build` and click the two buttons.
+Now try spinning up everything with `docker compose up --build` and click the two buttons. Our cookbook is working perfectly again - and the frontend has no clue where the backend runs! 🤯 
 
 This is how your final setup looks like.
 
 ![application-structure-3.4](./../assets/images/application-structure-3_4.PNG)
 
-Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so!
+Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so! 😎
