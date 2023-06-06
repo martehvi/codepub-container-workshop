@@ -299,16 +299,16 @@ Now, add this config file as part of the nginx container in the `docker-compose.
 
 A **volume** is a storage accessible for the container, which does not get deleted when the container shuts down, unlike everything else related to the container. In this example, we'll use a volume to add our proxy configuration file to the container.
 
-Explanation of the `volumes` parameter in the docker-compose.yml file ,following this template:
+Explanation of the `volumes` parameter in the docker-compose.yml file, following this template:
 
 ```yml
 volumes:
   - hostPath:containerPath:ro
 ```
 
-- `hostPart` specifies which local file you want to be copied to the container - in your case that is the pathe to your `nginx.conf`file, i.e. `./nginx.conf`
+- `hostPart` specifies which local file you want to copy to the container - in your case that is the path to your `nginx.conf` file, i.e. `./nginx.conf`
 - `containerPath` is the file on the container that the content will be copied/added to, we would like that to be `/etc/nginx/conf.d/default.conf`.
-- `ro` means `read-only`. This part sets the access mode for the volume. `ro` means the container will have `read-only` access to the mounted volume.
+- `ro` sets the access mode for the volume. `ro` means the container will have `read-only` access to the mounted volume.
 
 <details>
 <summary>✅ Solution</summary>
@@ -325,17 +325,32 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - "8003:8003"
-    networks:
-      - mynet
   ...
 ```
 
 </details>
 
-Now, test if this remapping has solved our problem with not accessing backend from the frontend 🤓 We need one final step in our setup, namely to change which url the frontend calls. It should now be changed from `localhost:8000/recipes` to the url nginx now runs on.
+Now, test if this remapping has solved our problem with not accessing backend from the frontend 🤓 Change which url the frontend calls when clicking "Get Recipe". It should now be changed from `localhost:8000/recipes` to the url nginx now runs on.
+
+<details>
+<summary>✅ Solution</summary>
+
+```js
+...
+
+      <Button onClick={() => getRecipe("localhost", 8003)}>
+      Get Recipe
+      </Button>
+
+...
+```
+
+</details>
+
+Now you should successfully see the "Recipe 101" displayed in the frontend - we've got contact again! 🎉
 
 **d) Add redirecting between two different frontends from the same server:**
-Now we want to use this same localhost:8003 to redirect the traffic for the two different backends when the user clicks the two different "Get recipe" buttons in frontend. There is several ways to do this, and our solution has chosen to use `v1` and `v2` tags in the url to differentiate. Try to now finish the nginx.conf file.
+Now we want to use this same `localhost:8003` to redirect the traffic for the two different backends when the user clicks the two different recipe buttons in frontend. There are several ways to do this, and our solution has chosen to use `v1` and `v2` tags in the url to differentiate. Try to now finish the `nginx.conf` file.
 
 > Hint: You can duplicate the already existing proxy_pass we configured. The one already configured can now be renamed to `/v1/...`.
 
