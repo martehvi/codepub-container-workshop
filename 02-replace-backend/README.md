@@ -6,7 +6,7 @@ Don't worry, the backend for this already exists. But there is a few things we n
 
 ## Run Backend Locally
 
-Some of you may have noticed the `assets` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup lets ensure that we are able to run it locally first.
+Some of you may have noticed the `assets` folder we have given you. Here you will find the `backend-openai` application. Before we start adding the new backend to our multi-container setup let's ensure that we are able to run it locally first.
 
 Our new backend depend on some environment variables that we need to configure. So, start off by moving into the `assets/backend-openai` folder and add the missing environment variable in the `.env`-file.
 
@@ -66,7 +66,7 @@ Starting out with a new empty service shell, we need to add the build configurat
 
 ### Task 2.2
 
-Create a new service in the Docker Compose file for our new backend. Remember to add port a mapping to localhost.
+Create a new service in the Docker Compose file for our new backend. Remember to add a port mapping to localhost.
 
 <details>
 <summary>✅ Solution</summary>
@@ -85,5 +85,5 @@ backend-openai:
 
 Having now added the new backend to your Compose setup, try running `docker-compose up --build` and try fetching a recipe! _**NOTE:** This might take up to 20 seconds as the new backend relies on OpenAI, which is not the fastest at generating responses...._
 
-Wow, look at that! The recipies you receive are now actually relevant and useful for the input ingredients.
-Now, for the final part we will use all three applications and even add a fourth service! Lets dive into **[Part 3](../03-proxy-server/README.md)**.
+Wow, look at that! The recipes you receive are now actually relevant and useful for the input ingredients.
+Now, for the final part we will use all three applications and even add a fourth service! Let's dive into **[Part 3](../03-proxy-server/README.md)**.
