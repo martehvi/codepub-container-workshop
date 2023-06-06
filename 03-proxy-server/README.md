@@ -1,24 +1,40 @@
-# Part 3: Add a Proxy Server
+# Part 3: Include both backends using a Proxy Server
 
 Even though the static backend did not provide a very useful recipe we should adapt our application to accomodate for the users that would want to still use the old Backend. Since, as you probably noticed, the OpenAI backend is not the fastest to respond (takes around 20 seconds...), also the API key has limitations and might be used up.
 
-In this final part, we will therefore extend our Docker Compose configuration to include both the static and the OpenAI backend services. To distribute traffic between the two backends we will add another service, a _Proxy Server_ to ensure higher application security.
-
-## What is a Proxy Server
-
-A proxy server acts as an intermediary between clients and servers, forwarding requests from clients to servers and returning responses back to the clients. It functions as a gateway, providing various benefits such as improved security, performance optimization, and caching.
-
-Proxy servers have several benefitial use areas in rela world projects. Such as, load balancing and security:
-
-- **Load Balancing**: Proxy servers can distribute incoming requests across multiple backend servers, balancing the workload and ensuring efficient utilization of resources. This helps to improve the scalability and availability of the application.
-
-- **Security**: Proxy servers can act as a barrier between clients and servers, providing an additional layer of security. They can filter incoming requests, block malicious traffic, and enforce security policies, protecting the backend servers from potential attacks.
-
-- **Other benefts/use areas**: Caching, anonymity and privacy.
-
-## Balance traffic between Backends
-
 First things first, we need to update our configuration to now include both backends. So, let's start with uncommenting the static backend in our `docker-compose.yml` file. Make sure to use different host ports for the two backends, i.e. they cannot both use port 8000 on your host computer. You could for instance assign port `8080` to the openAI backend.
+
+<details>
+<summary>✅ Solution</summary>
+
+This is how the `docker-compose.yml` file would look now
+
+```yml
+
+version: "3"
+services:
+  codepub-frontend:
+    build:
+      dockerfile: dockerfile
+      context: applications/frontend/
+    ports:
+      - "3000:3000"
+  codepub-backend:
+    build:
+      dockerfile: backend.dockerfile
+      context: applications/backend/
+    ports:
+      - "8000:8000"
+  openai-backend:
+    build:
+      dockerfile: backend-openai.dockerfile
+      context: applications/backend-openai/
+    ports:
+      - "8080:8080"
+
+```
+
+</details>
 
 Let's re-build and see what we are working with - `docker compose up --build`
 
@@ -64,11 +80,11 @@ If you study the Figure above, you might wonder why the backend is called from t
 
 ---
 
-As you can see our architecture is very reliant on communicating across our host computers network. This setup is all well and good for development for hosting your setup locally. However, in some cases some applications require higher security with least privilege principle when it comes to access. So, what if you did not want to expose your applications to your host computer but rather make them run seamlessly together and communicate within the multi-container orchestration? That's what we will do now with Docker `network` and `nginx`.
+As you can see our architecture is very reliant on communicating across our host computers network. Now we want to set up a more secure architecture, by removing the external ports from both backends. This follows the "least privileges" principle, and will force us to access the backends within the docker network.
 
 We will start by removing the ports that expose the backend outside of the docker environment. Currently we have configured mappings like this: `<host-port>:<container-port>`. If we remove the `<host-port>` part we expose only the container port to the compose orchestration, and not to your host computer.
 
-### Task 3.2
+### Task 3.2: Remove external ports in both backends
 
 Remove the the port outside of the compose network from your compose configuration. I.e. the ports that expose your applications to localhost. (Only remove host-port for the backends, keep the mapping for the frontend as we want to be able to still reach it from the browser.)
 
@@ -78,19 +94,19 @@ Remove the the port outside of the compose network from your compose configurati
 
 ```yml
 ---
-python-backend:
+codepub-backend:
   build:
     dockerfile: backend.dockerfile
     context: applications/backend/
   ports:
     - ":8000"
-python-frontend:
+codepub-frontend:
   build:
     dockerfile: dockerfile
     context: applications/frontend/
   ports:
     - "3000:3000"
-openapi-bakend:
+openai-backend:
   build:
     dockerfile: backend-openai.dockerfile
     context: applications/backend-openai/
@@ -109,7 +125,7 @@ To visualize, this is what the current state of your setup looks like, where fro
 
 Now that the ports are only exposed within the compose setup, why dont we try to see if we can make the containers communicate and reach eachother internally.
 
-### Task 3.3
+### Task 3.3: Test out multi-container communication
 
 Try to reach the backend endpoint `/checkLiveness` from the terminal of your containerized frontend application using `curl`.
 
@@ -141,7 +157,7 @@ This can be achieved in two ways. Entering the terminal through the container in
       - `-it` is a combination of two options. `-i` allows you to interact with the container by providing inout to the command being executed, and `-t` stands for _terminal_
       - `sh` is the command that will be executed inside the container. `sh` refers to the Unix shell.
   2.  Use curl to reach the `/checkliveness` endpoint.
-      - Run `curl codepub-frontend:8000/checkLiveness`.
+      - Run `curl codepub-backend:8000/checkLiveness`.
 
 - Enter the frontend through `Docker Desktop``
   1. Open Docker Desktop. Locate and click on the container running your frontend.
@@ -154,6 +170,24 @@ If you are familiar with using Docker you may wonder why this worked since we di
 Now that we know they can reach eachother internally we need to also update the frontend call to reference the container name, as it is currently referencing `localhost`.
 
 Open the `App.tsx` file and change the calls from `localhost` to `container-name` in the `getRecipe` input props in the button component.
+
+<details>
+<summary>✅ Solution</summary>
+
+```js
+...
+
+      <Button onClick={() => getRecipe("codepub-backend", 8000)}>
+      Get Recipe
+      </Button>
+      <Button onClick={() => getRecipe("backend-openai", 8080)}>
+      Get Smart Recipe
+      </Button>
+
+...
+```
+
+</details>
 
 You would think this should work without a problem since the frontend is within the docker network and we managed to access the backend from the terminal before - for some reason we now get "net::ERR_NAME_NOT_RESOLVED".
 The reason for this, can be explained with the below image
@@ -168,12 +202,25 @@ The webpage can only reach docker applications through ports exposed outside of 
 
 As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step.
 
-So, lets make the backends reachable without compromising too much on security. For this we will add a Proxy Server using **nginx**.
+So, lets make the backends reachable without compromising too much on security. To distribute traffic between the two backends we will add another service, a _Proxy Server_ called nginx.
 
 <details>
-<summary>What is nginx? 🤔</summary>
+<summary>What is Proxy Server and nginx? 🤔</summary>
 
-`nginx` is a popular web server and reverse proxy server that excels at handling high concurrent connections and efficiently managing network traffic. It can be used as a reverse proxy to receive requests from clients and forward them to appropriate backend servers. This is what we will be using it for, to route requests to specific backends. When used as a proxy, `nginx` recieves request from your localhost client and acts as an intermediary towards the three containerized applications.
+### Proxy Server
+
+A proxy server acts as an intermediary between clients and servers, forwarding requests from clients to servers and returning responses back to the clients. It functions as a gateway, providing various benefits such as improved security, performance optimization, and caching.
+
+Proxy servers have several benefitial use areas in rela world projects. Such as, load balancing and security:
+
+- **Load Balancing**: Proxy servers can distribute incoming requests across multiple backend servers, balancing the workload and ensuring efficient utilization of resources. This helps to improve the scalability and availability of the application.
+
+- **Security**: Proxy servers can act as a barrier between clients and servers, providing an additional layer of security. They can filter incoming requests, block malicious traffic, and enforce security policies, protecting the backend servers from potential attacks.
+
+- **Other benefts/use areas**: Caching, anonymity and privacy.
+
+### Nginx
+`nginx` is a type of proxy server, and excels at handling high concurrent connections and efficiently managing network traffic. It can be used as a reverse proxy to receive requests from clients and forward them to appropriate backend servers. This is what we will be using it for, to route requests to specific backends. When used as a proxy, `nginx` recieves request from your localhost client and acts as an intermediary towards the three containerized applications.
 
 </details>
 
@@ -223,18 +270,18 @@ Let's start by adding a server that listens to port `8003`, and checks the liven
 
 ```yml
 server {
-listen <INSERT_PORT_HERE>;
+  listen <INSERT_PORT_HERE>;
 
-location /<INSERT_ENDPOINT_HERE> {
-proxy_pass http://<CONTAINER_NAME>:<CONTAINER_INTERNAL_PORT>/recipes;
-}
+  location /<INSERT_ENDPOINT_HERE> {
+    proxy_pass http://<CONTAINER_NAME>:<CONTAINER_INTERNAL_PORT>/recipes;
+  }
 }
 ```
 
 <details>
 <summary>Hint 💡</summary>
 
-The container name is `python-backend` and the relevant port (internal in the network) is `8000`
+The container name is `codepub-backend` and the relevant port (internal in the network) is `8000`
 
 </details>
 
@@ -243,11 +290,11 @@ The container name is `python-backend` and the relevant port (internal in the ne
 
 ```yml
 server {
-listen 8003;
+  listen 8003;
 
-location /recipes {
-proxy_pass http://python-backend:8000/recipes;
-}
+  location /recipes {
+    proxy_pass http://codepub-backend:8000/recipes;
+  }
 }
 ```
 
@@ -303,15 +350,15 @@ Now we want to use this same localhost:8003 to redirect the traffic for the two 
 
 ```yml
 server {
-listen 8003;
+  listen 8003;
 
-location /v1/recipe {
-proxy_pass http://python-backend:8000/recipe;
-}
+  location /v1/recipe {
+    proxy_pass http://codepub-backend:8000/recipe;
+  }
 
-location /v2/recipe {
-proxy_pass http://openapi-bakend:8080/recipe;
-}
+  location /v2/recipe {
+    proxy_pass http://openai-backend:8080/recipe;
+  }
 }
 ```
 
@@ -354,6 +401,7 @@ Get Smart Recipe
 Now try spinning up everything with `docker compose up --build` and click the two buttons.
 
 This is how your final setup looks like.
+
 ![application-structure-3.4](./../assets/images/application-structure-3_4.PNG)
 
 Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so!
