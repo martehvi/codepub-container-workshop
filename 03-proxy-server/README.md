@@ -94,18 +94,18 @@ Remove the the port outside of the compose network from your compose configurati
 
 ```yml
 ---
-codepub-backend:
-  build:
-    dockerfile: backend.dockerfile
-    context: applications/backend/
-  ports:
-    - ":8000"
 codepub-frontend:
   build:
     dockerfile: dockerfile
     context: applications/frontend/
   ports:
     - "3000:3000"
+codepub-backend:
+  build:
+    dockerfile: backend.dockerfile
+    context: applications/backend/
+  ports:
+    - ":8000"
 openai-backend:
   build:
     dockerfile: backend-openai.dockerfile
@@ -200,9 +200,7 @@ The webpage can only reach docker applications through ports exposed outside of 
 
 ### Task 3.4 Update frontend to reach the internal backend containers using nginx
 
-As you now have learned, frontend applications are facing problems accessing container references. This is because the actual webpage is hosted outside of the Docker environment, and therefore does not have any knowledge of the network and the container names that we used to `curl` between containers in the last step.
-
-So, lets make the backends reachable without compromising too much on security. To distribute traffic between the two backends we will add another service, a _Proxy Server_ called nginx.
+As you now have learned, frontend applications are facing problems accessing container references. So, lets make the backends without using localhost. To access the two backends we will add another service, a _Proxy Server_ called nginx.
 
 <details>
 <summary>What is Proxy Server and nginx? 🤔</summary>
@@ -229,9 +227,7 @@ Proxy servers have several benefitial use areas in rela world projects. Such as,
 We want to add the nginx server as part of our docker network, so that it has access to the mapping we have done which allows us to reach the backend containers with their container names.
 We have chosen to use one of Dockers premade image, `nginx:1.16.0-alpine`.
 
-Try now to finish the configuration for the nginx container in the docker compose file by adding ports and network to it. We have added in the new parameters `image` for you - so now you simply need to add a fitting port mapping (choose whichever, but our solution has used the port `8003` for both external and internal).
-
-<summary>Template</summary>
+Try now to finish the configuration for the nginx container in the docker compose file by adding ports. We have added in the new parameters `image` for you - so now you simply need to add a fitting port mapping (choose whichever, but our solution has used the port `8003` for both external and internal).
 
 ```yml
 services:
@@ -239,8 +235,6 @@ services:
   nginx:
     image: nginx:1.16.0-alpine
     ports:
-      -
-    networks:
       -
   ...
 ```
@@ -256,8 +250,6 @@ services:
     image: nginx:1.16.0-alpine
     ports:
       - "8003:8003"
-    networks:
-      - mynet
   ...
 ```
 
