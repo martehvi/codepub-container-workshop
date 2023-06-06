@@ -57,7 +57,7 @@ You can add a service using the following template:
 
 ```yml
 services:
-  <service-name>:
+  <insert-service-name-here>:
     build:
       dockerfile: # (optional) must be set if the dockerfile is given a different value than the default name 'Dockerfile'.
       context: # Specifies the path to the directory containing the Dockerfile and the build context.
@@ -114,7 +114,7 @@ Did it work? If you tried to check `localhost:3000` without luck than maybe you 
 Try adding port mappings to our services. Make them reachable from your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure such a mapping. As before here is a template:
 
 ```yml
-<service-name>:
+<insert-service-name-here>:
   ...
   ports:
     - <host-port>:<container-port>
