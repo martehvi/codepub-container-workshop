@@ -24,7 +24,7 @@ function App() {
     }
   }
 
-  async function getRecipe(ipAddress: string, port: number) {
+  async function getRecipe(ipAddress: string, port: number, version?: string) {
     setLoading(true);
     const requestBody = JSON.stringify({
       ingredients: ingredients,
