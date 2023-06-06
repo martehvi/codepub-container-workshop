@@ -256,7 +256,7 @@ services:
 </details>
 
 **b) Remapping the HTTP request with nginx proxying:**
-Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `ngnix.conf` in the project root.
+Now we want the frontend to be able to call an exposed url to reach the backend. To configure this, we'll create a file, `nginx.conf` in the project root.
 
 Let's start by adding a server that listens to port `8003`, and checks the liveness endpoint by adding a `location` and redirects traffic to the container with the simple backend (first backend we used). Below is a template you can use for the `nginx.conf` file:
 
@@ -356,7 +356,7 @@ server {
 
 </details>
 
-**e) Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the ngnix we've configured! The ngnix is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint for the two backend versions. We pointed at in the `nginx.conf` in the previous task.
+**e) Update the App.tsx call to the backend:** Now we can try to get the frontend to communicate with the backends again - now by going through the nginx we've configured! The nginx is exposed at `localhost:8003` - and we want to call the `/recipe` endpoint for the two backend versions. We pointed at in the `nginx.conf` in the previous task.
 
 > Hint: You need to extend your `getRecipe()`-function implementation and function-calls to make use of the optional `version`-prop.
 >
