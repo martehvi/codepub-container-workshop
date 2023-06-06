@@ -40,7 +40,7 @@ Let's re-build and see what we are working with - `docker compose up --build`
 
 As you probably guessed, clicking "_Get recipe_" retrieves a response from the backend you allowed to keep the _8000_ port. We want the user to be able to choose which backend to use so let's start off by adding a button that fetches from the other backend.
 
-### Task 3.1
+### Task 3.1: Add a button for each backend
 
 To add a button we need to expand the code currently placed within the `App.tsx` file within our frontend (_/applications/frontend/App.tsx_). How you adapt the getRecipe function (either through props or by creating a copy) is up to you, but we need to make it so that the two buttons fetch data from one backend each.
 
