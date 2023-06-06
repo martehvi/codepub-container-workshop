@@ -35,14 +35,14 @@ app.post("/recipes", async (req: Request, res: Response) => {
       "This is a recipe that will always work, perfect for everyone!",
     ingredients: ingredients,
     steps: [
-      "1. Cut all vegetables",
-      "2. Slice and spice fish or meat",
-      "3. Heat whatever needs to be heated",
-      "4. Put on a timer",
-      "5. Sit down and wait with whatever you do to chill",
-      "6. Put together a fresh salad",
-      "7. Put it all together on a plate",
-      "8. Enjoy!",
+      "Cut all vegetables",
+      "Slice and spice fish or meat",
+      "Heat whatever needs to be heated",
+      "Put on a timer",
+      "Sit down and wait with whatever you do to chill",
+      "Put together a fresh salad",
+      "Put it all together on a plate",
+      "Enjoy!",
     ],
   };
   res.send(recipe);
