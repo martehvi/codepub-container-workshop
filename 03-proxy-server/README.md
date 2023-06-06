@@ -38,11 +38,11 @@ services:
 
 Let's re-build and see what we are working with - `docker compose up --build`
 
-As you probably guessed, clicking "_Get recipe_" retrives a response from the backend you allowed to keep the _8000_ port. We want the user to be able to choose which backend to use so lets start off by adding a button that fetches from the other backend.
+As you probably guessed, clicking "_Get recipe_" retrieves a response from the backend you allowed to keep the _8000_ port. We want the user to be able to choose which backend to use so let's start off by adding a button that fetches from the other backend.
 
 ### Task 3.1
 
-To add a button we need to expand the code currently placed within the `App.tsx` file within our frontend (_/applications/frontend/App.tsx_). How you adapt the getRecipe function (either throguht props or by creating a copy) is up to you, but we need to make it so that the two buttons fetch data from one backend each.
+To add a button we need to expand the code currently placed within the `App.tsx` file within our frontend (_/applications/frontend/App.tsx_). How you adapt the getRecipe function (either through props or by creating a copy) is up to you, but we need to make it so that the two buttons fetch data from one backend each.
 
 <details>
 <summary>✅ Solution</summary>
@@ -72,7 +72,7 @@ To visualize this is how your applications communicate at this point:
 ![Application-structure-3.1](./../assets/images/application-structure-3_1.PNG)
 
 <details>
-<summary>For the curios ones 🙋‍♀️🙋‍♂️</summary>
+<summary>For the curious ones 🙋‍♀️🙋‍♂️</summary>
 
 If you study the Figure above, you might wonder why the backend is called from the WWW client, and not directly from the `frontend` container. This is because of the frontend framework we are using, React. React uses **client side rendering**. We do not need to worry about this now - but later in this workshop this will force us to solve our architecture a lil bit different. Wait and see for [Task 3.3](#task-33) and [Task 3.4](#task-34-update-frontend-to-reach-the-internal-backend-containers-using-nginx) 😏
 
@@ -200,7 +200,7 @@ The webpage can only reach docker applications through ports exposed outside of 
 
 ### Task 3.4 Update frontend to reach the internal backend containers using nginx
 
-As you now have learned, frontend applications are facing problems accessing container references. So, lets make the backends without using localhost. To access the two backends we will add another service, a _Proxy Server_ called nginx.
+As you now have learned, frontend applications are facing problems accessing container references. So, let's make the backends without using localhost. To access the two backends we will add another service, a _Proxy Server_ called nginx.
 
 <details>
 <summary>What is Proxy Server and nginx? 🤔</summary>
@@ -209,7 +209,7 @@ As you now have learned, frontend applications are facing problems accessing con
 
 A proxy server acts as an intermediary between clients and servers, forwarding requests from clients to servers and returning responses back to the clients. It functions as a gateway, providing various benefits such as improved security, performance optimization, and caching.
 
-Proxy servers have several benefitial use areas in rela world projects. Such as, load balancing and security:
+Proxy servers have several beneficial use areas in real world projects. Such as, load balancing and security:
 
 - **Load Balancing**: Proxy servers can distribute incoming requests across multiple backend servers, balancing the workload and ensuring efficient utilization of resources. This helps to improve the scalability and availability of the application.
 
@@ -413,4 +413,4 @@ This is how your final setup looks like.
 
 ![application-structure-3.4](./../assets/images/application-structure-3_4.PNG)
 
-Congratulations! You have now learned about and compleated the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so! 😎
+Congratulations! You have now learned about and completed the Docker Compose workshop! We hope you learned something new and exciting, and had fun doing so! 😎

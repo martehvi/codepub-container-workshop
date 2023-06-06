@@ -6,14 +6,14 @@ By the end of this step we will have a running cookbook application - displaying
 
 ## Without Docker Compose
 
-Before we delve into the `docker-compose.yml` file lets first run our Backend and Frontend together as individual containers and see that they can communicate.
+Before we delve into the `docker-compose.yml` file let's first run our Backend and Frontend together as individual containers and see that they can communicate.
 
 ### Frontend
 
 Let's move into the frontend folder - `cd applications/frontend/`
 
 1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
-   - The `-t` flag provides the image with a tag which is essentially a name for the image, here you need to specify an apropriate image name such as `-t frontend`.
+   - The `-t` flag provides the image with a tag which is essentially a name for the image, here you need to specify an appropriate image name such as `-t frontend`.
    - The `.` in the end describes the path to where Docker Engine should find the dockerfile to build the image upon.
    - The `-f` is used to reference the dockerfile name used in the build. This flag is needed when naming the file anything other than the default `dockerfile` value.
 2. Next, let's run the image we just built by using: `docker run -p 3000:3000 -t <image-tag-name>`
@@ -37,7 +37,7 @@ Hint 🔍 - What is _&lt;image-tag-name&gt;_ and _&lt;docker-filename&gt;_ ?
 Now that you got the frontend up and running, let's do the same for the backend. Change directories into the backend folder (`cd ../backend/`) and spin up the dockerfile there as well.
 
 1. Start off with building a docker image by running: `docker build -t <image-tag-name> -f <docker-filename> .`
-2. Next lets run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
+2. Next let's run the image we just built by using: `docker run -p 8000:8000 -t <image-tag-name>`
 
 > NB: the _docker-filname_ for your backend is not using the default dockerfile naming so this you must locate in the backend folder and specify behind the filename flag, `-f` .
 
@@ -49,7 +49,7 @@ Are they both running? Nice! You should now be able to add ingredients and displ
 
 Wouldn't it be cool if you only had to write **one** command to accomplish all of that? That's what we could use Docker Compose for, let's try it!
 
-To start you off, we have created a **`docker-compose.yml`** file for you to use. It's located at the top of this repository.
+To start you off, we have created a **`docker-compose.yml`** file for you to use. It's located at the root of this repository.
 
 Once you have found and opened it you should see a pretty empty configuration which we are now going to fill in. Let's start by giving our two services names. It's recommended to use a naming convention that describes the container content or purpose, making it easy to understand and distinguish between different containerized applications.
 
@@ -65,7 +65,7 @@ services:
 
 ### Task 1.1
 
-Figure out the build configuration for the two services. In a docker compose service the service configuration has the following format:
+Figure out the build configuration for the two services. 
 
 <details>
 <summary>Need a file-structure recap? </summary>
@@ -111,7 +111,7 @@ Did it work? If you tried to check `localhost:3000` without luck than maybe you 
 
 ### Task 1.2
 
-Try adding port mappings to our services. Make them reachable from your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure such a mapping. As before here is a tempalte:
+Try adding port mappings to our services. Make them reachable from your host computer. Just as for `build`, docker compose services have a `ports` section where we can configure such a mapping. As before here is a template:
 
 ```yml
 <service-name>:
@@ -149,4 +149,4 @@ Try running `docker compose up --build` this time (_adding the --build flag to e
 
 Now you have successfully set up your applications using Docker Compose. As you can see in the Docker Desktop UI, you have now containerized and orchestrated multiple containers together.
 
-Let's move into **[Part 2](../02-replace-backend/README.md)**, where we will replace our static backend with a smart one.
+Let's move into **[Part 2](../02-replace-backend/README.md)**, where we will replace our static backend with a smart one. 😉
