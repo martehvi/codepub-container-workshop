@@ -15,7 +15,7 @@ function Header(props: HeaderProps) {
           color: "#232323",
         }}
       >
-        {props.name} 
+        {props.name}'s Magic Cookbook
       </Box>
     </Grid>
   );
