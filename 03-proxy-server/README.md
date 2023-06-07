@@ -505,10 +505,10 @@ await fetch(`http://${ipAddress}:${port}/${version}/recipes`, {
 })
 
 ...
-<Button onClick={() => getRecipe("localhost", 8000, "v1")}>
+<Button onClick={() => getRecipe("localhost", 8003, "v1")}>
     Get Recipe
 </Button>
-<Button onClick={() => getRecipe("localhost", 8080, "v2")}>
+<Button onClick={() => getRecipe("localhost", 8003, "v2")}>
     Get Smart Recipe
 </Button>
 ...
