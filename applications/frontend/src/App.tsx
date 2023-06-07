@@ -17,7 +17,7 @@ function App() {
   function loadingIndicator() {
     if (loading) {
       return (
-        <Box display={"flex"} justifyContent={"center"}>
+        <Box>
           <CircularProgress />
         </Box>
       );
