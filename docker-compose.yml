@@ -1,2 +1,26 @@
 version: "3"
 services:
+  codepub-frontend:
+    build:
+      dockerfile: dockerfile
+      context: applications/frontend/
+    ports:
+      - "3000:3000"
+  codepub-backend:
+    build:
+      dockerfile: backend.dockerfile
+      context: applications/backend/
+    ports:
+      - ":8000"
+  openai-backend:
+    build:
+      dockerfile: backend-openai.dockerfile
+      context: applications/backend-openai/
+    ports:
+      - ":8080"
+  nginx:
+      image: nginx:1.16.0-alpine
+      volumes:
+        - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      ports:
+        - "8003:8003"

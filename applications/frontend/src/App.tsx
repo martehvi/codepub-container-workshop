@@ -30,7 +30,7 @@ function App() {
       ingredients: ingredients,
     });
     try {
-      await fetch(`http://${ipAddress}:${port}/checkLiveness`, {
+      await fetch(`http://${ipAddress}:${port}/${version}/checkLiveness`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ function App() {
     }
 
     try {
-      await fetch(`http://${ipAddress}:${port}/recipes`, {
+      await fetch(`http://${ipAddress}:${port}/${version}/recipes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,8 +76,11 @@ function App() {
             justifyContent={"center"}
           >
             <SearchBox setIngredients={setIngredients} />
-            <Button onClick={() => getRecipe("localhost", 8000)}>
+            <Button onClick={() => getRecipe("localhost", 8003, "v1")}>
               Get Recipe
+            </Button>
+            <Button onClick={() => getRecipe("localhost", 8003, "v2")}>
+              Get Smart Recipe
             </Button>
           </Grid>
           <Grid width={1} alignContent={"center"}>
